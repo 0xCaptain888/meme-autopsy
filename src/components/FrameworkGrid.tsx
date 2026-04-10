@@ -1,39 +1,25 @@
 "use client";
 
-const dimensions = [
-  {
-    num: "01",
-    name: "Symbolic Density",
-    description: "How layered and resonant are the core symbols?",
-  },
-  {
-    num: "02",
-    name: "Lore Depth",
-    description: "How rich and self-sustaining is the mythology?",
-  },
-  {
-    num: "03",
-    name: "Ritual Repeatability",
-    description: "Can community behaviors become recurring rituals?",
-  },
-  {
-    num: "04",
-    name: "Community Cohesion",
-    description: "How strong is the in-group identity and belonging?",
-  },
-  {
-    num: "05",
-    name: "Belief Elasticity",
-    description: "Can the narrative absorb contradiction and evolve?",
-  },
-  {
-    num: "06",
-    name: "Narrative Survivability",
-    description: "Will the story endure beyond the initial wave?",
-  },
-];
+import { useI18n } from "@/lib/i18n";
+
+const dimensionKeys = [
+  "symbolicDensity",
+  "loreDepth",
+  "ritualRepeatability",
+  "communityCohesion",
+  "beliefElasticity",
+  "narrativeSurvivability",
+] as const;
 
 export default function FrameworkGrid() {
+  const { t } = useI18n();
+
+  const dimensions = dimensionKeys.map((key, i) => ({
+    num: String(i + 1).padStart(2, "0"),
+    name: t(`framework.${key}`),
+    description: t(`framework.${key}.desc`),
+  }));
+
   return (
     <section className="relative py-20 px-4">
       <div className="max-w-5xl mx-auto">
@@ -43,10 +29,10 @@ export default function FrameworkGrid() {
             // FORENSIC FRAMEWORK
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold mt-3 mb-4">
-            Six-Dimension Diagnostic Engine
+            {t("framework.title")}
           </h2>
           <p className="font-body text-forensic-text max-w-xl mx-auto">
-            Every meme project is evaluated across six structural dimensions that determine its cultural survivability.
+            {t("framework.subtitle")}
           </p>
         </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { ScoreSet } from "@/lib/types";
 
 interface ScoreGridProps {
@@ -37,6 +38,7 @@ function getScoreTextColor(score: number): string {
 }
 
 export default function ScoreGrid({ scores }: ScoreGridProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal" style={{ animationDelay: "0.1s" }}>
       {/* Section header */}
@@ -45,10 +47,10 @@ export default function ScoreGrid({ scores }: ScoreGridProps) {
           // DIAGNOSTIC SCORES
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          Forensic Breakdown
+          {t("breakdown.title")}
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          Six-dimension structural analysis of narrative strength and collapse risk.
+          {t("breakdown.subtitle")}
         </p>
       </div>
 
@@ -65,7 +67,7 @@ export default function ScoreGrid({ scores }: ScoreGridProps) {
               {/* Score label + value */}
               <div className="flex items-start justify-between mb-3">
                 <span className="font-mono text-[11px] tracking-wider uppercase text-forensic-text">
-                  {dimensionLabels[key]}
+                  {t(`score.${key}`)}
                 </span>
                 <span className={`font-mono text-2xl font-bold ${getScoreTextColor(dim.score)}`}>
                   {dim.score}

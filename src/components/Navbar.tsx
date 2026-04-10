@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 interface NavbarProps {
@@ -7,6 +8,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onNewCase }: NavbarProps) {
+  const { t } = useI18n();
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 border-b border-forensic-border/50 bg-forensic-black/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
@@ -30,10 +32,10 @@ export default function Navbar({ onNewCase }: NavbarProps) {
           </div>
           <div>
             <span className="font-mono text-sm font-semibold tracking-widest text-bone">
-              MEME AUTOPSY
+              {t("nav.title")}
             </span>
             <span className="hidden sm:inline ml-3 font-mono text-[10px] tracking-wider text-forensic-muted uppercase">
-              Forensic Intelligence Engine
+              {t("nav.tagline")}
             </span>
           </div>
         </div>

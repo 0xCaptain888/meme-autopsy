@@ -1,10 +1,13 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 interface ForensicNotesPanelProps {
   notes: string[];
 }
 
 export default function ForensicNotesPanel({ notes }: ForensicNotesPanelProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal" style={{ animationDelay: "0.35s" }}>
       {/* Section header */}
@@ -13,7 +16,7 @@ export default function ForensicNotesPanel({ notes }: ForensicNotesPanelProps) {
           // FORENSIC NOTES
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          Supplementary Observations
+          {t("forensicNotes.title")}
         </h3>
         <p className="font-body text-forensic-text text-sm">
           Additional diagnostic observations from the forensic analysis pipeline.

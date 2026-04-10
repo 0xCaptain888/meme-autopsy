@@ -1,10 +1,13 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 interface InputDemoCTAProps {
   onStartAnalysis: () => void;
 }
 
 export default function InputDemoCTA({ onStartAnalysis }: InputDemoCTAProps) {
+  const { t } = useI18n();
   return (
     <section className="relative py-20 px-4">
       <div className="max-w-3xl mx-auto text-center">
@@ -16,18 +19,18 @@ export default function InputDemoCTA({ onStartAnalysis }: InputDemoCTAProps) {
         </span>
 
         <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-bone mb-4 leading-tight">
-          Run your own autopsy
+          {t("inputCTA.title")}
         </h2>
 
         <p className="font-body text-lg text-forensic-text leading-relaxed max-w-lg mx-auto mb-10">
-          Paste a meme project narrative and let the forensic engine analyze it.
+          {t("inputCTA.subtitle")}
         </p>
 
         <button
           onClick={onStartAnalysis}
           className="group relative inline-flex items-center gap-3 px-10 py-4 bg-verdict-active text-white font-mono text-sm font-medium tracking-wider uppercase rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-verdict-active/20"
         >
-          <span className="relative z-10">Start Analysis</span>
+          <span className="relative z-10">{t("inputCTA.button")}</span>
           <svg
             className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform"
             viewBox="0 0 16 16"

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { StatusBadge as StatusBadgeType } from "@/lib/types";
 
 interface StatusBadgeProps {
@@ -7,6 +8,7 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ badge }: StatusBadgeProps) {
+  const { t } = useI18n();
   const colorMap: Record<StatusBadgeType, { text: string; border: string; bg: string; dot: string }> = {
     CRITICAL: {
       text: "text-verdict-critical",
@@ -47,7 +49,7 @@ export default function StatusBadge({ badge }: StatusBadgeProps) {
       className={`inline-flex items-center gap-2 px-3 py-1 font-mono text-[11px] tracking-[0.15em] font-semibold uppercase border rounded-sm ${colors.text} ${colors.border} ${colors.bg}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${colors.dot} animate-pulse`} />
-      {badge}
+      {t(`badge.${badge}`)}
     </span>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { FormData } from "@/lib/types";
 
 interface InputPanelProps {
@@ -10,6 +11,7 @@ interface InputPanelProps {
 }
 
 export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }: InputPanelProps) {
+  const { t } = useI18n();
   const canSubmit = formData.projectName.trim() && formData.narrative.trim() && !isAnalyzing;
 
   const handleChange = (field: keyof FormData, value: string) => {
@@ -34,10 +36,10 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
             // CASE INTAKE
           </span>
           <h2 className="font-display text-2xl font-bold mt-2 mb-2">
-            Open a New Case
+            {t("input.title")}
           </h2>
           <p className="font-body text-sm text-forensic-text">
-            Submit a meme project narrative for forensic analysis.
+            {t("input.subtitle")}
           </p>
         </div>
 
@@ -45,7 +47,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
           {/* Project Name */}
           <div>
             <label className="block font-mono text-xs tracking-wider uppercase text-forensic-text mb-2">
-              Project Name <span className="text-verdict-critical">*</span>
+              {t("input.projectName")} <span className="text-verdict-critical">*</span>
             </label>
             <input
               type="text"
@@ -60,7 +62,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
           {/* Narrative */}
           <div>
             <label className="block font-mono text-xs tracking-wider uppercase text-forensic-text mb-2">
-              Narrative <span className="text-verdict-critical">*</span>
+              {t("input.narrative")} <span className="text-verdict-critical">*</span>
             </label>
             <textarea
               value={formData.narrative}
@@ -74,7 +76,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
           {/* Community Behavior */}
           <div>
             <label className="block font-mono text-xs tracking-wider uppercase text-forensic-text mb-2">
-              Community Behavior
+              {t("input.communityText")}
             </label>
             <textarea
               value={formData.communityText}
@@ -88,7 +90,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
           {/* Optional Notes */}
           <div>
             <label className="block font-mono text-xs tracking-wider uppercase text-forensic-text mb-2">
-              Optional Notes
+              {t("input.notes")}
             </label>
             <textarea
               value={formData.notes}
@@ -101,7 +103,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
 
           {/* Note */}
           <p className="font-mono text-[11px] text-forensic-muted tracking-wide">
-            No price charts. No hype metrics. Just narrative forensics.
+            {t("input.note")}
           </p>
 
           {/* Submit */}
@@ -120,7 +122,7 @@ export default function InputPanel({ formData, onChange, onSubmit, isAnalyzing }
                   Analyzing...
                 </>
               ) : (
-                "Run Autopsy"
+                t("input.submit")
               )}
             </button>
           </div>

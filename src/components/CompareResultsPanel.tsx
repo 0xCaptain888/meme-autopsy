@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { AutopsyReport, ScoreSet } from "@/lib/types";
 import StatusBadge from "./StatusBadge";
 
@@ -37,6 +38,7 @@ function getScoreBarColor(score: number): string {
 }
 
 export default function CompareResultsPanel({ original, revised }: CompareResultsPanelProps) {
+  const { t } = useI18n();
   return (
     <div className="h-full overflow-y-auto pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
@@ -46,7 +48,7 @@ export default function CompareResultsPanel({ original, revised }: CompareResult
             // COMPARISON VIEW
           </span>
           <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2 text-bone">
-            Report Comparison
+            {t("compare.title")}
           </h2>
           <div className="mt-4 h-px bg-gradient-to-r from-verdict-active/40 via-forensic-border to-transparent" />
         </div>
@@ -54,8 +56,8 @@ export default function CompareResultsPanel({ original, revised }: CompareResult
         {/* Verdict comparison */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {[
-            { label: "ORIGINAL", report: original },
-            { label: "REVISED", report: revised },
+            { label: t("compare.original"), report: original },
+            { label: t("compare.revised"), report: revised },
           ].map(({ label, report }) => (
             <div key={label} className="bg-forensic-panel border border-forensic-border rounded-sm p-5">
               <div className="flex items-center justify-between mb-3">
@@ -86,7 +88,7 @@ export default function CompareResultsPanel({ original, revised }: CompareResult
                 <div key={key} className="bg-forensic-panel border border-forensic-border rounded-sm p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-mono text-xs tracking-wider uppercase text-forensic-text">
-                      {dimensionLabels[key]}
+                      {t(`score.${key}`)}
                     </span>
                     <span className={`font-mono text-xs font-bold ${getDiffColor(diff)}`}>
                       {getDiffPrefix(diff)}{diff}
@@ -95,7 +97,7 @@ export default function CompareResultsPanel({ original, revised }: CompareResult
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-mono text-[9px] text-forensic-muted">Original</span>
+                        <span className="font-mono text-[9px] text-forensic-muted">{t("compare.original")}</span>
                         <span className="font-mono text-sm font-bold text-forensic-text">{origScore}</span>
                       </div>
                       <div className="w-full h-1 bg-forensic-dark rounded-full overflow-hidden">
@@ -104,7 +106,7 @@ export default function CompareResultsPanel({ original, revised }: CompareResult
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-mono text-[9px] text-forensic-muted">Revised</span>
+                        <span className="font-mono text-[9px] text-forensic-muted">{t("compare.revised")}</span>
                         <span className="font-mono text-sm font-bold text-bone">{revScore}</span>
                       </div>
                       <div className="w-full h-1 bg-forensic-dark rounded-full overflow-hidden">

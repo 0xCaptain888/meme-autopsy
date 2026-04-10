@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { TimelineItem } from "@/lib/types";
 
 interface TimelineProps {
@@ -32,6 +33,7 @@ function getRiskColor(level?: string): string {
 }
 
 export default function Timeline({ timeline }: TimelineProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal" style={{ animationDelay: "0.2s" }}>
       {/* Section header */}
@@ -40,10 +42,10 @@ export default function Timeline({ timeline }: TimelineProps) {
           // COLLAPSE TIMELINE
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          Lifecycle Projection
+          {t("timeline.title")}
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          Projected failure points across the lifecycle of narrative attention and belief formation.
+          {t("timeline.subtitle")}
         </p>
       </div>
 

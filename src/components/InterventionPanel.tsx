@@ -1,10 +1,13 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 interface InterventionPanelProps {
   interventions: string[];
 }
 
 export default function InterventionPanel({ interventions }: InterventionPanelProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal" style={{ animationDelay: "0.3s" }}>
       {/* Section header */}
@@ -13,10 +16,10 @@ export default function InterventionPanel({ interventions }: InterventionPanelPr
           // RECOMMENDED INTERVENTIONS
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          Recovery Actions
+          {t("interventions.title")}
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          Specific actions to increase symbolic durability, community cohesion, and long-term survivability.
+          {t("interventions.subtitle")}
         </p>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import type { AutopsyReport } from "@/lib/types";
 
 interface InputSnapshotPanelProps {
@@ -8,6 +9,7 @@ interface InputSnapshotPanelProps {
 }
 
 export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps) {
+  const { t } = useI18n();
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -39,7 +41,7 @@ export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps
               <path d="M5 5h4M5 7h3M5 9h2" strokeLinecap="round" />
             </svg>
             <span className="font-mono text-xs tracking-wider uppercase text-forensic-text">
-              Original Input Data
+              {t("inputSnapshot.title")}
             </span>
           </div>
           <svg
@@ -63,7 +65,7 @@ export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps
             {/* Project Name */}
             <div className="pt-4">
               <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-1">
-                PROJECT NAME
+                {t("input.projectName")}
               </span>
               <p className="font-mono text-sm text-bone">{snapshot.projectName}</p>
             </div>
@@ -71,7 +73,7 @@ export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps
             {/* Narrative */}
             <div>
               <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-1">
-                NARRATIVE
+                {t("input.narrative")}
               </span>
               <p className="font-body text-sm text-forensic-text leading-relaxed">
                 {snapshot.narrative}
@@ -82,7 +84,7 @@ export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps
             {snapshot.communityText && (
               <div>
                 <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-1">
-                  COMMUNITY TEXT
+                  {t("input.communityText")}
                 </span>
                 <p className="font-body text-sm text-forensic-text leading-relaxed whitespace-pre-line">
                   {snapshot.communityText}
@@ -94,7 +96,7 @@ export default function InputSnapshotPanel({ snapshot }: InputSnapshotPanelProps
             {snapshot.notes && (
               <div>
                 <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-1">
-                  NOTES
+                  {t("input.notes")}
                 </span>
                 <p className="font-body text-sm text-forensic-text leading-relaxed">
                   {snapshot.notes}

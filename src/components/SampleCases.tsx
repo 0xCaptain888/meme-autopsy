@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import StatusBadge from "./StatusBadge";
 import type { StatusBadge as StatusBadgeType, Verdict } from "@/lib/types";
 
@@ -46,6 +47,7 @@ const cases: {
 ];
 
 export default function SampleCases({ onSelectCase }: SampleCasesProps) {
+  const { t } = useI18n();
   return (
     <section className="relative py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -55,10 +57,10 @@ export default function SampleCases({ onSelectCase }: SampleCasesProps) {
             // CASE FILES
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold mt-3 mb-4">
-            Sample Cases
+            {t("samples.title")}
           </h2>
           <p className="font-body text-forensic-text max-w-xl mx-auto">
-            Explore pre-analyzed forensic reports across the meme lifecycle spectrum.
+            {t("samples.subtitle")}
           </p>
         </div>
 

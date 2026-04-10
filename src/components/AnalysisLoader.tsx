@@ -1,20 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface AnalysisLoaderProps {
   onComplete: () => void;
 }
 
 const steps = [
-  "Parsing narrative...",
-  "Extracting symbolic anchors...",
-  "Evaluating ritual repeatability...",
-  "Estimating collapse risks...",
-  "Building report...",
+  "loading.0",
+  "loading.1",
+  "loading.2",
+  "loading.3",
+  "loading.4",
 ];
 
 export default function AnalysisLoader({ onComplete }: AnalysisLoaderProps) {
+  const { t } = useI18n();
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
@@ -132,7 +134,7 @@ export default function AnalysisLoader({ onComplete }: AnalysisLoaderProps) {
               <span className="text-forensic-muted text-xs w-5 text-right flex-shrink-0">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span>{step}</span>
+              <span>{t(step)}</span>
             </div>
           ))}
         </div>

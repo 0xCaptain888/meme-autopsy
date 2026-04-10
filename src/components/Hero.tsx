@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { AutopsyReport } from "@/lib/types";
 
 interface HeroProps {
@@ -50,6 +51,7 @@ function MiniReportCard() {
 }
 
 export default function Hero({ onRunAutopsy, onViewSample }: HeroProps) {
+  const { t } = useI18n();
   return (
     <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-4 pt-14">
       {/* Background grid */}
@@ -73,7 +75,7 @@ export default function Hero({ onRunAutopsy, onViewSample }: HeroProps) {
             className="reveal font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6"
             style={{ animationDelay: "0.1s" }}
           >
-            <span className="text-bone">Dissect the life and death of any meme project</span>
+            <span className="text-bone">{t("hero.headline")}</span>
           </h1>
 
           {/* Subheadline */}
@@ -81,7 +83,7 @@ export default function Hero({ onRunAutopsy, onViewSample }: HeroProps) {
             className="reveal font-body text-lg sm:text-xl text-forensic-text max-w-2xl mx-auto lg:mx-0 mb-4 leading-relaxed"
             style={{ animationDelay: "0.2s" }}
           >
-            Meme Autopsy is an AI forensic engine that diagnoses why meme narratives go viral, decay, or die.
+            {t("hero.subheadline")}
           </p>
 
           {/* Supporting line */}
@@ -89,7 +91,7 @@ export default function Hero({ onRunAutopsy, onViewSample }: HeroProps) {
             className="reveal font-mono text-xs text-forensic-muted tracking-wider mb-10"
             style={{ animationDelay: "0.3s" }}
           >
-            From hype to collapse, every meme leaves evidence.
+            {t("hero.supporting")}
           </p>
 
           {/* Buttons */}
@@ -101,14 +103,14 @@ export default function Hero({ onRunAutopsy, onViewSample }: HeroProps) {
               onClick={onRunAutopsy}
               className="group relative px-8 py-3.5 bg-verdict-active text-white font-mono text-sm font-medium tracking-wider uppercase rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-verdict-active/20"
             >
-              <span className="relative z-10">Run Autopsy</span>
+              <span className="relative z-10">{t("hero.runAutopsy")}</span>
               <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
             </button>
             <button
               onClick={onViewSample}
               className="px-8 py-3.5 border border-forensic-border text-forensic-text font-mono text-sm tracking-wider uppercase rounded-sm hover:border-bone hover:text-bone transition-all duration-300"
             >
-              View Sample Report
+              {t("hero.loadSample")}
             </button>
           </div>
         </div>

@@ -1,6 +1,9 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 export default function EmptyReportState() {
+  const { t } = useI18n();
   return (
     <div className="h-full flex items-center justify-center relative overflow-hidden">
       {/* Subtle forensic grid background */}
@@ -39,10 +42,10 @@ export default function EmptyReportState() {
 
         {/* Text */}
         <p className="font-mono text-sm text-forensic-muted tracking-wider mb-2">
-          NO REPORT LOADED
+          {t("empty.title")}
         </p>
         <p className="font-body text-sm text-forensic-text leading-relaxed">
-          Submit a case to generate a forensic report. The analysis engine will evaluate your meme project across six diagnostic dimensions.
+          {t("empty.subtitle")}
         </p>
 
         {/* Decorative scan line */}

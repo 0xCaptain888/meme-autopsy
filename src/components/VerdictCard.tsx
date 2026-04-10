@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { Verdict, StatusBadge as StatusBadgeType } from "@/lib/types";
 import StatusBadge from "./StatusBadge";
 import ConfidenceMeter from "./ConfidenceMeter";
@@ -44,6 +45,7 @@ function getAccentColor(verdict: Verdict): string {
 }
 
 export default function VerdictCard({ verdict, confidence, primaryCause, statusBadge }: VerdictCardProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal bg-forensic-panel border border-forensic-border rounded-sm overflow-hidden">
       {/* Top accent bar */}
@@ -55,12 +57,12 @@ export default function VerdictCard({ verdict, confidence, primaryCause, statusB
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-                VERDICT
+                {t("report.verdict")}
               </span>
               <StatusBadge badge={statusBadge} />
             </div>
             <p className={`font-display text-2xl sm:text-3xl font-bold ${getVerdictColor(verdict)}`}>
-              {verdict}
+              {t(`verdict.${verdict}`)}
             </p>
           </div>
           <ConfidenceMeter confidence={confidence} />
@@ -69,7 +71,7 @@ export default function VerdictCard({ verdict, confidence, primaryCause, statusB
         {/* Primary cause */}
         <div className="pt-5 border-t border-forensic-border">
           <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-            PRIMARY CAUSE
+            {t("report.primaryCause")}
           </span>
           <p className="font-body text-base text-bone/90 mt-1 leading-relaxed">
             {primaryCause}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { ReasoningSignal } from "@/lib/types";
 
 interface ReasoningSignalsPanelProps {
@@ -7,6 +8,7 @@ interface ReasoningSignalsPanelProps {
 }
 
 export default function ReasoningSignalsPanel({ signals }: ReasoningSignalsPanelProps) {
+  const { t } = useI18n();
   return (
     <div className="reveal" style={{ animationDelay: "0.4s" }}>
       {/* Section header */}
@@ -15,10 +17,10 @@ export default function ReasoningSignalsPanel({ signals }: ReasoningSignalsPanel
           // REASONING SIGNALS
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          Signal Analysis
+          {t("reasoningSignals.title")}
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          Key reasoning signals that shaped the forensic verdict.
+          {t("reasoningSignals.subtitle")}
         </p>
       </div>
 

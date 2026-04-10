@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { AutopsyReport } from "@/lib/types";
 import VerdictCard from "./VerdictCard";
 import ScoreGrid from "./ScoreGrid";
@@ -16,6 +17,7 @@ interface ReportViewProps {
 }
 
 export default function ReportView({ report, onRerun, onCompare }: ReportViewProps) {
+  const { t } = useI18n();
   return (
     <div className="h-full overflow-y-auto pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -23,7 +25,7 @@ export default function ReportView({ report, onRerun, onCompare }: ReportViewPro
         <div className="reveal pt-6 mb-8">
           <div className="flex items-center justify-between mb-3">
             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical">
-              // CASE REPORT
+              {`// ${t("report.label")}`}
             </span>
             <div className="flex items-center gap-2">
               <span className="font-mono text-[9px] tracking-wider text-forensic-muted">
@@ -54,7 +56,7 @@ export default function ReportView({ report, onRerun, onCompare }: ReportViewPro
           {/* Executive Summary */}
           <div className="reveal bg-forensic-panel border border-forensic-border rounded-sm p-6">
             <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted block mb-3">
-              EXECUTIVE SUMMARY
+              {t("report.summary")}
             </span>
             <p className="font-body text-sm text-forensic-text leading-relaxed">
               {report.summary}
@@ -86,13 +88,13 @@ export default function ReportView({ report, onRerun, onCompare }: ReportViewPro
             onClick={onRerun}
             className="px-6 py-3 bg-verdict-active text-white font-mono text-xs tracking-wider uppercase rounded-sm hover:bg-amber-600 transition-colors duration-300"
           >
-            Re-run Analysis
+            {t("report.rerun")}
           </button>
           <button
             onClick={onCompare}
             className="px-6 py-3 border border-forensic-border text-forensic-text font-mono text-xs tracking-wider uppercase rounded-sm hover:border-bone hover:text-bone transition-colors duration-300"
           >
-            Compare Results
+            {t("report.compare")}
           </button>
         </div>
 
