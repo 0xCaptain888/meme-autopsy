@@ -1,5 +1,7 @@
 # Meme Autopsy
 
+**Live Demo: [https://q5nx2y93.mule.page](https://q5nx2y93.mule.page/)**
+
 Meme Autopsy is an AI forensic engine for meme projects.
 
 Instead of generating hype, it diagnoses why a meme narrative may go viral, decay, or die. The product treats internet-native assets like forensic cases, producing a structured autopsy report across narrative strength, community cohesion, symbolic durability, lore depth, and attention resilience.
