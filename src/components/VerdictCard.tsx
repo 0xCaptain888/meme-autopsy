@@ -38,6 +38,21 @@ export default function VerdictCard({ report }: VerdictCardProps) {
       />
 
       <div className="p-6 sm:p-8">
+        {/* Case metadata row */}
+        <div className="flex items-center gap-4 mb-4 pb-4 border-b border-forensic-border/50">
+          <span className="font-mono text-[9px] tracking-[0.15em] text-forensic-muted">
+            CASE-{report.projectName === "DogePriest" ? "2024-0417" : report.projectName === "BananaFax" ? "2024-0412" : report.projectName === "SaintMeme" ? "2024-0421" : `${Date.now().toString(36).toUpperCase()}`}
+          </span>
+          <span className="text-forensic-border">|</span>
+          <span className="font-mono text-[9px] tracking-wider text-forensic-muted">
+            {report.projectName === "DogePriest" ? "2024-04-17T09:42:00Z" : report.projectName === "BananaFax" ? "2024-04-12T14:18:00Z" : report.projectName === "SaintMeme" ? "2024-04-21T11:05:00Z" : new Date().toISOString().split(".")[0] + "Z"}
+          </span>
+          <span className="text-forensic-border">|</span>
+          <span className="font-mono text-[9px] tracking-wider text-forensic-muted">
+            ENGINE v1.0
+          </span>
+        </div>
+
         {/* Project name + Badge */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
           <h3 className="font-mono text-2xl sm:text-3xl font-bold text-bone tracking-tight">

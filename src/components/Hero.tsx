@@ -11,7 +11,7 @@ export default function Hero({ onRunAutopsy, onLoadSample }: HeroProps) {
   const { t } = useI18n();
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 pt-14">
+    <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-4 pt-14">
       {/* Background grid */}
       <div className="absolute inset-0 grid-pattern opacity-50" />
 

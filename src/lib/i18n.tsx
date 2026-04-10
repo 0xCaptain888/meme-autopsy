@@ -20,7 +20,7 @@ const translations: TranslationDict = {
     zh: "从炒作到崩溃，每个 Meme 都会留下证据。",
   },
   "hero.runAutopsy": { en: "Run Autopsy", zh: "执行尸检" },
-  "hero.loadSample": { en: "Load Sample Case", zh: "加载示例案件" },
+  "hero.loadSample": { en: "View Sample Report", zh: "查看示例报告" },
 
   // Sample Cases
   "samples.title": { en: "Sample Cases", zh: "示例案件" },

@@ -6,7 +6,11 @@ import type { AppView, AutopsyReport } from "@/lib/types";
 import { sampleReports, sampleInputs } from "@/data/sampleCases";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import SampleAutopsyPreview from "@/components/SampleAutopsyPreview";
+import HowItWorks from "@/components/HowItWorks";
+import NotAnotherMemeTool from "@/components/NotAnotherMemeTool";
 import SampleCases from "@/components/SampleCases";
+import ThesisBlock from "@/components/ThesisBlock";
 import InputForm from "@/components/InputForm";
 import LoadingState from "@/components/LoadingState";
 import ReportView from "@/components/ReportView";
@@ -47,6 +51,15 @@ export default function Home() {
     }
     setView("input");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const handleViewFullReport = useCallback((caseName: string) => {
+    const report = sampleReports[caseName];
+    if (report) {
+      setCurrentReport(report);
+      setView("loading");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }, []);
 
   const handleSubmit = useCallback(
@@ -155,12 +168,18 @@ export default function Home() {
           {view === "landing" && (
             <>
               <Hero onRunAutopsy={goToInput} onLoadSample={() => {
-                const el = document.getElementById("sample-cases");
+                const el = document.getElementById("autopsy-preview");
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }} />
+              <div id="autopsy-preview">
+                <SampleAutopsyPreview onViewFullReport={handleViewFullReport} />
+              </div>
+              <HowItWorks />
+              <NotAnotherMemeTool />
               <div id="sample-cases">
                 <SampleCases onSelectCase={handleSelectSample} />
               </div>
+              <ThesisBlock />
             </>
           )}
 
