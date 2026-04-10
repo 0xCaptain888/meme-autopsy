@@ -10,8 +10,6 @@ const cases = [
   {
     key: "BananaFax",
     verdictKey: "samples.deadOnArrival",
-    color: "verdict-critical",
-    glowClass: "glow-red",
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
@@ -20,12 +18,14 @@ const cases = [
     ),
     descEn: "No symbolic anchor. No belief structure. Noise without signal.",
     descZh: "没有符号锚点。没有信仰结构。只有噪音没有信号。",
+    iconColor: "text-verdict-critical",
+    badgeClasses: "text-verdict-critical border-verdict-critical/30 bg-verdict-critical/5",
+    hoverBorder: "hover:border-verdict-critical/50",
+    gradientVia: "via-verdict-critical/40",
   },
   {
     key: "DogePriest",
     verdictKey: "samples.viralButFragile",
-    color: "verdict-active",
-    glowClass: "glow-amber",
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M10 3l1.5 4.5H16l-3.5 2.5 1.5 4.5L10 12l-4 2.5 1.5-4.5L4 7.5h4.5L10 3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
@@ -33,12 +33,14 @@ const cases = [
     ),
     descEn: "Strong initial identity. Weak long-term doctrine. Fragile conviction layer.",
     descZh: "强大的初始身份认同。薄弱的长期教义。脆弱的信念层。",
+    iconColor: "text-verdict-active",
+    badgeClasses: "text-verdict-active border-verdict-active/30 bg-verdict-active/5",
+    hoverBorder: "hover:border-verdict-active/50",
+    gradientVia: "via-verdict-active/40",
   },
   {
     key: "SaintMeme",
     verdictKey: "samples.stableCult",
-    color: "verdict-signal",
-    glowClass: "glow-green",
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M10 2v16M6 6l4-4 4 4M4 10h12M6 14l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -46,6 +48,10 @@ const cases = [
     ),
     descEn: "Mission-driven identity. Deep lore. Ritual structures sustain belief.",
     descZh: "使命驱动的身份认同。深厚传说。仪式结构维持信仰。",
+    iconColor: "text-verdict-signal",
+    badgeClasses: "text-verdict-signal border-verdict-signal/30 bg-verdict-signal/5",
+    hoverBorder: "hover:border-verdict-signal/50",
+    gradientVia: "via-verdict-signal/40",
   },
 ];
 
@@ -74,14 +80,14 @@ export default function SampleCases({ onSelectCase }: SampleCasesProps) {
             <button
               key={c.key}
               onClick={() => onSelectCase(c.key)}
-              className={`reveal group relative text-left p-6 bg-forensic-panel border border-forensic-border rounded-sm hover:border-${c.color}/50 transition-all duration-500`}
+              className={`reveal group relative text-left p-6 bg-forensic-panel border border-forensic-border rounded-sm ${c.hoverBorder} transition-all duration-500`}
               style={{ animationDelay: `${i * 0.15}s` }}
             >
               {/* Top row */}
               <div className="flex items-center justify-between mb-4">
-                <span className={`text-${c.color}`}>{c.icon}</span>
+                <span className={c.iconColor}>{c.icon}</span>
                 <span
-                  className={`font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 border rounded-sm text-${c.color} border-${c.color}/30 bg-${c.color}/5`}
+                  className={`font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 border rounded-sm ${c.badgeClasses}`}
                 >
                   {t(c.verdictKey)}
                 </span>
@@ -99,7 +105,7 @@ export default function SampleCases({ onSelectCase }: SampleCasesProps) {
 
               {/* Bottom accent */}
               <div
-                className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-${c.color}/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${c.gradientVia} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
               />
             </button>
           ))}

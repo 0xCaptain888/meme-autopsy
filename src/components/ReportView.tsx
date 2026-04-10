@@ -6,6 +6,7 @@ import VerdictCard from "./VerdictCard";
 import ScoreGrid from "./ScoreGrid";
 import Timeline from "./Timeline";
 import InterventionList from "./InterventionList";
+import ForensicNotes from "./ForensicNotes";
 
 interface ReportViewProps {
   report: AutopsyReport;
@@ -59,6 +60,7 @@ export default function ReportView({ report, onNewCase }: ReportViewProps) {
           <ScoreGrid report={report} />
           <Timeline report={report} />
           <InterventionList report={report} />
+          <ForensicNotes report={report} />
         </div>
 
         {/* Footer */}

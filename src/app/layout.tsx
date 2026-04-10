@@ -5,6 +5,15 @@ export const metadata: Metadata = {
   title: "Meme Autopsy — Forensic Intelligence Engine",
   description:
     "An AI forensic engine that diagnoses why meme projects go viral, decay, or die.",
+  icons: {
+    icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Meme Autopsy — Forensic Intelligence Engine",
+    description:
+      "An AI forensic engine that diagnoses why meme projects go viral, decay, or die.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
