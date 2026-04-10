@@ -1,38 +1,42 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
-import { zhScoreExplanations } from "@/lib/i18n";
-import type { AutopsyReport } from "@/lib/types";
+import type { ScoreSet } from "@/lib/types";
 
 interface ScoreGridProps {
-  report: AutopsyReport;
+  scores: ScoreSet;
 }
 
-const scoreKeys = [
-  "narrativeCoherence",
-  "memeSpreadability",
-  "symbolStickiness",
-  "communityTrust",
+const dimensionKeys: (keyof ScoreSet)[] = [
+  "symbolicDensity",
   "loreDepth",
-  "attentionResilience",
-] as const;
+  "ritualRepeatability",
+  "communityCohesion",
+  "beliefElasticity",
+  "narrativeSurvivability",
+];
+
+const dimensionLabels: Record<keyof ScoreSet, string> = {
+  symbolicDensity: "Symbolic Density",
+  loreDepth: "Lore Depth",
+  ritualRepeatability: "Ritual Repeatability",
+  communityCohesion: "Community Cohesion",
+  beliefElasticity: "Belief Elasticity",
+  narrativeSurvivability: "Narrative Survivability",
+};
 
 function getScoreColor(score: number): string {
-  if (score >= 75) return "bg-verdict-signal";
-  if (score >= 50) return "bg-verdict-active";
+  if (score >= 70) return "bg-verdict-signal";
+  if (score >= 40) return "bg-verdict-active";
   return "bg-verdict-critical";
 }
 
 function getScoreTextColor(score: number): string {
-  if (score >= 75) return "text-verdict-signal";
-  if (score >= 50) return "text-verdict-active";
+  if (score >= 70) return "text-verdict-signal";
+  if (score >= 40) return "text-verdict-active";
   return "text-verdict-critical";
 }
 
-export default function ScoreGrid({ report }: ScoreGridProps) {
-  const { t, lang } = useI18n();
-  const zhExplanations = zhScoreExplanations[report.projectName];
-
+export default function ScoreGrid({ scores }: ScoreGridProps) {
   return (
     <div className="reveal" style={{ animationDelay: "0.1s" }}>
       {/* Section header */}
@@ -41,22 +45,17 @@ export default function ScoreGrid({ report }: ScoreGridProps) {
           // DIAGNOSTIC SCORES
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          {t("breakdown.title")}
+          Forensic Breakdown
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          {t("breakdown.subtitle")}
+          Six-dimension structural analysis of narrative strength and collapse risk.
         </p>
       </div>
 
       {/* Score cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {scoreKeys.map((key, i) => {
-          const score = report.scores[key];
-          const explanation =
-            lang === "zh" && zhExplanations
-              ? zhExplanations[key]
-              : report.scoreExplanations[key];
-
+        {dimensionKeys.map((key, i) => {
+          const dim = scores[key];
           return (
             <div
               key={key}
@@ -66,35 +65,27 @@ export default function ScoreGrid({ report }: ScoreGridProps) {
               {/* Score label + value */}
               <div className="flex items-start justify-between mb-3">
                 <span className="font-mono text-[11px] tracking-wider uppercase text-forensic-text">
-                  {t(`score.${key}`)}
+                  {dimensionLabels[key]}
                 </span>
-                <span
-                  className={`font-mono text-2xl font-bold ${getScoreTextColor(
-                    score
-                  )}`}
-                >
-                  {score}
+                <span className={`font-mono text-2xl font-bold ${getScoreTextColor(dim.score)}`}>
+                  {dim.score}
                 </span>
               </div>
 
               {/* Progress bar */}
               <div className="w-full h-1 bg-forensic-dark rounded-full overflow-hidden mb-3">
                 <div
-                  className={`h-full rounded-full progress-bar-fill ${getScoreColor(
-                    score
-                  )}`}
-                  style={
-                    {
-                      "--target-width": `${score}%`,
-                      animationDelay: `${0.3 + i * 0.1}s`,
-                    } as React.CSSProperties
-                  }
+                  className={`h-full rounded-full progress-bar-fill ${getScoreColor(dim.score)}`}
+                  style={{
+                    "--target-width": `${dim.score}%`,
+                    animationDelay: `${0.3 + i * 0.1}s`,
+                  } as React.CSSProperties}
                 />
               </div>
 
-              {/* Explanation */}
+              {/* Reading */}
               <p className="font-body text-xs text-forensic-muted leading-relaxed">
-                {explanation}
+                {dim.reading}
               </p>
             </div>
           );

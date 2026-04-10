@@ -1,21 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useI18n } from "@/lib/i18n";
 
-interface LoadingStateProps {
+interface AnalysisLoaderProps {
   onComplete: () => void;
 }
 
-export default function LoadingState({ onComplete }: LoadingStateProps) {
-  const { t, lang } = useI18n();
+const steps = [
+  "Parsing narrative...",
+  "Extracting symbolic anchors...",
+  "Evaluating ritual repeatability...",
+  "Estimating collapse risks...",
+  "Building report...",
+];
+
+export default function AnalysisLoader({ onComplete }: AnalysisLoaderProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
-  const totalSteps = 6;
+  const totalSteps = steps.length;
 
   useEffect(() => {
-    const stepDuration = 900;
+    const stepDuration = 1000;
     const interval = setInterval(() => {
       setCurrentStep((prev) => {
         if (prev >= totalSteps - 1) {
@@ -37,7 +43,7 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
   }, [currentStep]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="h-full flex items-center justify-center px-4 relative overflow-hidden">
       {/* Animated background grid */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
 
@@ -52,47 +58,45 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
       />
 
       {/* Corner markers */}
-      <div className="absolute top-20 left-8 w-8 h-8 border-l border-t border-verdict-critical/20" />
-      <div className="absolute top-20 right-8 w-8 h-8 border-r border-t border-verdict-critical/20" />
-      <div className="absolute bottom-20 left-8 w-8 h-8 border-l border-b border-verdict-critical/20" />
-      <div className="absolute bottom-20 right-8 w-8 h-8 border-r border-b border-verdict-critical/20" />
+      <div className="absolute top-8 left-8 w-8 h-8 border-l border-t border-verdict-critical/20" />
+      <div className="absolute top-8 right-8 w-8 h-8 border-r border-t border-verdict-critical/20" />
+      <div className="absolute bottom-8 left-8 w-8 h-8 border-l border-b border-verdict-critical/20" />
+      <div className="absolute bottom-8 right-8 w-8 h-8 border-r border-b border-verdict-critical/20" />
 
-      <div className="relative z-10 w-full max-w-lg text-center">
+      <div className="relative z-10 w-full max-w-sm text-center">
         {/* Scanning icon */}
-        <div className="relative w-28 h-28 mx-auto mb-10">
+        <div className="relative w-24 h-24 mx-auto mb-8">
           <div className="absolute inset-0 border border-verdict-critical/20 rounded-full animate-ping" style={{ animationDuration: "2s" }} />
           <div className="absolute inset-2 border border-verdict-critical/30 rounded-full scan-pulse" />
           <div className="absolute inset-5 border border-verdict-critical/50 rounded-full" />
           {/* Rotating crosshair */}
           <div
             className="absolute inset-0 flex items-center justify-center"
-            style={{
-              animation: "spin 8s linear infinite",
-            }}
+            style={{ animation: "spin 8s linear infinite" }}
           >
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-verdict-critical">
-              <path d="M16 4v24M4 16h24" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
-              <path d="M8 8l16 16M24 8L8 24" stroke="currentColor" strokeWidth="0.5" opacity="0.2" />
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="text-verdict-critical">
+              <path d="M14 4v20M4 14h20" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+              <path d="M7 7l14 14M21 7L7 21" stroke="currentColor" strokeWidth="0.5" opacity="0.2" />
             </svg>
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="text-verdict-critical">
-              <path d="M14 6v16M6 14h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.9" />
-              <circle cx="14" cy="14" r="4" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-verdict-critical">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.9" />
+              <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1" opacity="0.6" />
             </svg>
           </div>
         </div>
 
         {/* Label */}
-        <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical mb-2 animate-flicker">
-          {lang === "zh" ? "法医分析进行中" : "FORENSIC ANALYSIS IN PROGRESS"}
+        <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical mb-2 animate-pulse">
+          FORENSIC ANALYSIS IN PROGRESS
         </div>
         <div className="font-mono text-[9px] tracking-wider text-forensic-muted mb-6">
-          {lang === "zh" ? "引擎版本" : "ENGINE"} v1.0 &middot; {Math.round(progress)}% {lang === "zh" ? "完成" : "COMPLETE"}
+          ENGINE v1.0 &middot; {Math.round(progress)}% COMPLETE
         </div>
 
         {/* Progress bar */}
-        <div className="w-full h-[2px] bg-forensic-border mb-8 rounded overflow-hidden relative">
+        <div className="w-full h-[2px] bg-forensic-border mb-6 rounded overflow-hidden relative">
           <div
             className="h-full bg-verdict-critical transition-all duration-700 ease-out relative"
             style={{ width: `${progress}%` }}
@@ -102,8 +106,8 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
         </div>
 
         {/* Steps */}
-        <div className="space-y-3 text-left max-w-sm mx-auto">
-          {Array.from({ length: totalSteps }).map((_, i) => (
+        <div className="space-y-2.5 text-left max-w-xs mx-auto">
+          {steps.map((step, i) => (
             <div
               key={i}
               className={`font-mono text-sm transition-all duration-500 flex items-center gap-3 ${
@@ -114,7 +118,6 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
                   : "text-forensic-border"
               }`}
             >
-              {/* Status indicator */}
               <span className="flex-shrink-0 w-4 flex justify-center">
                 {i < currentStep ? (
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -129,17 +132,15 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
               <span className="text-forensic-muted text-xs w-5 text-right flex-shrink-0">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className={i === currentStep ? "cursor-blink" : ""}>
-                {t(`loading.${i}`)}
-              </span>
+              <span>{step}</span>
             </div>
           ))}
         </div>
 
         {/* Complete flash */}
         {showComplete && (
-          <div className="mt-8 font-mono text-xs tracking-[0.3em] uppercase text-verdict-signal animate-fade-in">
-            {lang === "zh" ? "分析完成 — 生成报告" : "ANALYSIS COMPLETE — GENERATING REPORT"}
+          <div className="mt-6 font-mono text-xs tracking-[0.3em] uppercase text-verdict-signal animate-pulse">
+            ANALYSIS COMPLETE — GENERATING REPORT
           </div>
         )}
       </div>
@@ -150,6 +151,6 @@ export default function LoadingState({ onComplete }: LoadingStateProps) {
           to { transform: rotate(360deg); }
         }
       `}</style>
-    </section>
+    </div>
   );
 }

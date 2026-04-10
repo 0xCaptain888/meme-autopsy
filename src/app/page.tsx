@@ -2,164 +2,154 @@
 
 import { useState, useCallback } from "react";
 import { I18nProvider } from "@/lib/i18n";
-import type { AppView, AutopsyReport } from "@/lib/types";
+import type { AppView, AutopsyReport, FormData } from "@/lib/types";
 import { sampleReports, sampleInputs } from "@/data/sampleCases";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SampleAutopsyPreview from "@/components/SampleAutopsyPreview";
-import HowItWorks from "@/components/HowItWorks";
-import NotAnotherMemeTool from "@/components/NotAnotherMemeTool";
+import FrameworkGrid from "@/components/FrameworkGrid";
+import InputDemoCTA from "@/components/InputDemoCTA";
 import SampleCases from "@/components/SampleCases";
 import ThesisBlock from "@/components/ThesisBlock";
-import InputForm from "@/components/InputForm";
-import LoadingState from "@/components/LoadingState";
+import InputPanel from "@/components/InputPanel";
+import EmptyReportState from "@/components/EmptyReportState";
+import AnalysisLoader from "@/components/AnalysisLoader";
 import ReportView from "@/components/ReportView";
+import CompareResultsPanel from "@/components/CompareResultsPanel";
 
 export default function Home() {
   const [view, setView] = useState<AppView>("landing");
+  const [formData, setFormData] = useState<FormData>({
+    projectName: "",
+    narrative: "",
+    communityText: "",
+    notes: "",
+  });
   const [currentReport, setCurrentReport] = useState<AutopsyReport | null>(
     null
   );
-  const [formData, setFormData] = useState<{
-    projectName?: string;
-    narrative?: string;
-    websiteUrl?: string;
-    communityText?: string;
-  }>({});
+  const [previousReport, setPreviousReport] = useState<AutopsyReport | null>(
+    null
+  );
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showCompare, setShowCompare] = useState(false);
+  const [rightPanel, setRightPanel] = useState<"empty" | "loading" | "report">(
+    "empty"
+  );
 
   const goToLanding = useCallback(() => {
     setView("landing");
     setCurrentReport(null);
-    setFormData({});
+    setPreviousReport(null);
+    setFormData({ projectName: "", narrative: "", communityText: "", notes: "" });
+    setRightPanel("empty");
+    setShowCompare(false);
+    setIsAnalyzing(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const goToInput = useCallback(() => {
-    setView("input");
+  const goToWorkspace = useCallback(() => {
+    setView("workspace");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleSelectSample = useCallback((caseName: string) => {
-    const input = sampleInputs[caseName];
-    if (input) {
-      setFormData({
-        projectName: input.projectName,
-        narrative: input.narrative,
-        websiteUrl: input.websiteUrl,
-        communityText: input.communityText,
-      });
-    }
-    setView("input");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  const runAnalysis = useCallback(
+    async (data: FormData) => {
+      setRightPanel("loading");
+      setIsAnalyzing(true);
+      setShowCompare(false);
 
-  const handleViewFullReport = useCallback((caseName: string) => {
-    const report = sampleReports[caseName];
+      try {
+        const res = await fetch("/api/autopsy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
+
+        const report: AutopsyReport = await res.json();
+        setCurrentReport(report);
+        setRightPanel("report");
+        setIsAnalyzing(false);
+      } catch {
+        // Fallback: try to load from sample reports
+        const fallback = sampleReports[data.projectName];
+        if (fallback) {
+          setCurrentReport(fallback);
+          setRightPanel("report");
+        } else {
+          setRightPanel("empty");
+        }
+        setIsAnalyzing(false);
+      }
+    },
+    []
+  );
+
+  const handleSelectSample = useCallback(
+    (projectName: string) => {
+      const input = sampleInputs[projectName];
+      if (input) {
+        setFormData(input);
+        setView("workspace");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        runAnalysis(input);
+      }
+    },
+    [runAnalysis]
+  );
+
+  const handleViewSample = useCallback(() => {
+    const report = sampleReports["DogePriest"];
     if (report) {
       setCurrentReport(report);
-      setView("loading");
+      const input = sampleInputs["DogePriest"];
+      if (input) setFormData(input);
+      setView("workspace");
+      setRightPanel("report");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, []);
 
   const handleSubmit = useCallback(
-    (data: {
-      projectName: string;
-      narrative: string;
-      websiteUrl: string;
-      communityText: string;
-    }) => {
-      // Check if it matches a sample case
-      const report = sampleReports[data.projectName];
-      if (report) {
-        setCurrentReport(report);
-      } else {
-        // Generate a mock report for custom input
-        setCurrentReport({
-          projectName: data.projectName,
-          verdict: "Decaying Fast",
-          statusBadge: "ACTIVE CASE",
-          primaryCause:
-            "Insufficient narrative data for definitive classification",
-          secondaryCauses: [
-            "Narrative structure requires deeper analysis",
-            "Community signal density is below threshold",
-            "Symbolic framework not yet fully mapped",
-          ],
-          executiveSummary: `${data.projectName} has been submitted for forensic analysis. Based on the provided narrative and community language, the project shows signs of active cultural formation but requires further monitoring to determine long-term survivability. The current evidence suggests a project in early-stage development with potential but unproven durability.`,
-          scores: {
-            narrativeCoherence: 55,
-            memeSpreadability: 48,
-            symbolStickiness: 42,
-            communityTrust: 38,
-            loreDepth: 35,
-            attentionResilience: 30,
-          },
-          scoreExplanations: {
-            narrativeCoherence:
-              "The narrative shows basic structure but lacks distinctive framing.",
-            memeSpreadability:
-              "Spreadability potential exists but requires stronger hooks.",
-            symbolStickiness:
-              "Symbolic elements are present but not yet iconic.",
-            communityTrust:
-              "Community formation is in early stages.",
-            loreDepth:
-              "Lore framework is minimal and needs expansion.",
-            attentionResilience:
-              "Long-term attention sustainability is uncertain.",
-          },
-          timeline: [
-            {
-              phase: "Initial Hook",
-              diagnosis:
-                "The concept has basic curiosity triggers but lacks sharp differentiation.",
-            },
-            {
-              phase: "Social Spread",
-              diagnosis:
-                "Spread potential is moderate but depends on community activation.",
-            },
-            {
-              phase: "Identity Formation",
-              diagnosis:
-                "Identity markers are weak and need stronger insider language.",
-            },
-            {
-              phase: "Fatigue Trigger",
-              diagnosis:
-                "Without narrative escalation, fatigue may arrive quickly.",
-            },
-            {
-              phase: "Belief Collapse",
-              diagnosis:
-                "Belief structure is fragile and requires mission clarity to sustain.",
-            },
-          ],
-          interventions: [
-            "Develop a clearer symbolic identity with memorable visual and verbal anchors.",
-            "Build community rituals and recurring engagement patterns.",
-            "Establish a narrative arc with escalation points and mission clarity.",
-          ],
-        });
+    (data: FormData) => {
+      setFormData(data);
+      if (currentReport) {
+        setPreviousReport(currentReport);
       }
-      setView("loading");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      runAnalysis(data);
     },
-    []
+    [runAnalysis, currentReport]
   );
 
-  const handleLoadingComplete = useCallback(() => {
-    setView("report");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleRerun = useCallback(() => {
+    if (currentReport) {
+      setPreviousReport(currentReport);
+    }
+    runAnalysis(formData);
+  }, [formData, currentReport, runAnalysis]);
+
+  const handleCompare = useCallback(() => {
+    setShowCompare(true);
   }, []);
+
+  const handleLoadingComplete = useCallback(() => {
+    if (currentReport) {
+      setRightPanel("report");
+    }
+    setIsAnalyzing(false);
+  }, [currentReport]);
 
   return (
     <I18nProvider>
       <div className="min-h-screen bg-forensic-black">
-        <Navbar onNewCase={view === "report" ? goToLanding : undefined} />
+        <Navbar
+          onNewCase={view === "workspace" ? goToLanding : undefined}
+        />
 
-        {/* View transitions */}
         <div
           key={view}
           className="animate-fade-in"
@@ -167,15 +157,10 @@ export default function Home() {
         >
           {view === "landing" && (
             <>
-              <Hero onRunAutopsy={goToInput} onLoadSample={() => {
-                const el = document.getElementById("autopsy-preview");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }} />
-              <div id="autopsy-preview">
-                <SampleAutopsyPreview onViewFullReport={handleViewFullReport} />
-              </div>
-              <HowItWorks />
-              <NotAnotherMemeTool />
+              <Hero onRunAutopsy={goToWorkspace} onViewSample={handleViewSample} />
+              <SampleAutopsyPreview onViewFullReport={handleViewSample} />
+              <FrameworkGrid />
+              <InputDemoCTA onStartAnalysis={goToWorkspace} />
               <div id="sample-cases">
                 <SampleCases onSelectCase={handleSelectSample} />
               </div>
@@ -183,20 +168,40 @@ export default function Home() {
             </>
           )}
 
-          {view === "input" && (
-            <InputForm
-              onSubmit={handleSubmit}
-              onBack={goToLanding}
-              initialData={formData}
-            />
-          )}
-
-          {view === "loading" && (
-            <LoadingState onComplete={handleLoadingComplete} />
-          )}
-
-          {view === "report" && currentReport && (
-            <ReportView report={currentReport} onNewCase={goToLanding} />
+          {view === "workspace" && (
+            <div className="flex h-screen pt-14">
+              <div className="w-full md:w-[420px] md:min-w-[420px] border-r border-forensic-border overflow-y-auto workspace-scroll-panel">
+                <InputPanel
+                  formData={formData}
+                  onChange={setFormData}
+                  onSubmit={() => handleSubmit(formData)}
+                  isAnalyzing={isAnalyzing}
+                />
+              </div>
+              <div className="hidden md:flex flex-1 overflow-y-auto workspace-scroll-panel">
+                <div className="flex-1">
+                  {rightPanel === "empty" && <EmptyReportState />}
+                  {rightPanel === "loading" && (
+                    <AnalysisLoader onComplete={handleLoadingComplete} />
+                  )}
+                  {rightPanel === "report" && currentReport && (
+                    <>
+                      <ReportView
+                        report={currentReport}
+                        onRerun={handleRerun}
+                        onCompare={previousReport ? handleCompare : undefined}
+                      />
+                      {showCompare && previousReport && (
+                        <CompareResultsPanel
+                          original={previousReport}
+                          revised={currentReport}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

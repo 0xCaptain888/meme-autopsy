@@ -2,17 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Meme Autopsy — Forensic Intelligence Engine",
+  title: "Meme Autopsy — AI Forensic Intelligence for Meme Narratives",
   description:
-    "An AI forensic engine that diagnoses why meme projects go viral, decay, or die.",
+    "An AI-powered forensic engine that dissects meme project narratives across six structural dimensions to diagnose virality, cultural survivability, and collapse risk.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
+    title: "Meme Autopsy — AI Forensic Intelligence for Meme Narratives",
+    description:
+      "Dissect any meme project across symbolic density, lore depth, ritual repeatability, community cohesion, belief elasticity, and narrative survivability.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "Meme Autopsy — Forensic Intelligence Engine",
     description:
-      "An AI forensic engine that diagnoses why meme projects go viral, decay, or die.",
-    type: "website",
+      "AI-powered narrative forensics for meme projects. From hype to collapse, every meme leaves evidence.",
   },
 };
 

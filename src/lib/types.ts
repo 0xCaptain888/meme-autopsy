@@ -1,43 +1,73 @@
 export type Verdict =
   | "Dead on Arrival"
   | "Viral but Fragile"
+  | "Short-Term Attention Trap"
   | "Stable Cult Potential"
-  | "Decaying Fast";
+  | "High Conviction Meme"
+  | "Chaos Without Cohesion";
+
+export type StatusBadge = "CRITICAL" | "ACTIVE CASE" | "HIGH SIGNAL" | "WARNING" | "NEUTRAL";
+
+export interface DimensionScore {
+  score: number;
+  reading: string;
+}
 
 export interface ScoreSet {
-  narrativeCoherence: number;
-  memeSpreadability: number;
-  symbolStickiness: number;
-  communityTrust: number;
-  loreDepth: number;
-  attentionResilience: number;
+  symbolicDensity: DimensionScore;
+  loreDepth: DimensionScore;
+  ritualRepeatability: DimensionScore;
+  communityCohesion: DimensionScore;
+  beliefElasticity: DimensionScore;
+  narrativeSurvivability: DimensionScore;
 }
 
 export interface TimelineItem {
   phase: string;
   diagnosis: string;
+  riskLevel?: "LOW" | "MODERATE" | "ELEVATED" | "HIGH" | "CRITICAL";
+}
+
+export interface ReasoningSignal {
+  label: string;
+  detail: string;
 }
 
 export interface AutopsyReport {
-  projectName: string;
+  case_id: string;
+  analysis_timestamp: string;
+  project_name: string;
   verdict: Verdict;
-  statusBadge: string;
-  primaryCause: string;
-  secondaryCauses: string[];
-  executiveSummary: string;
+  confidence: number;
+  statusBadge: StatusBadge;
+  primary_cause: string;
+  summary: string;
   scores: ScoreSet;
-  scoreExplanations: Record<string, string>;
-  timeline: TimelineItem[];
+  collapse_timeline: TimelineItem[];
   interventions: string[];
+  forensic_notes: string[];
+  reasoning_signals: ReasoningSignal[];
+  comparable_pattern: string;
+  input_snapshot: {
+    projectName: string;
+    narrative: string;
+    communityText?: string;
+    notes?: string;
+  };
 }
 
-export interface SampleCaseInput {
+export interface FormData {
   projectName: string;
   narrative: string;
-  websiteUrl?: string;
-  communityText?: string;
+  communityText: string;
+  notes: string;
+}
+
+export interface SampleCase {
+  case_id: string;
+  input: FormData;
+  report: AutopsyReport;
 }
 
 export type Language = "en" | "zh";
-
-export type AppView = "landing" | "input" | "loading" | "report";
+export type AppView = "landing" | "workspace";

@@ -1,66 +1,64 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
 import StatusBadge from "./StatusBadge";
+import type { StatusBadge as StatusBadgeType, Verdict } from "@/lib/types";
 
 interface SampleCasesProps {
-  onSelectCase: (caseName: string) => void;
+  onSelectCase: (projectName: string) => void;
 }
 
-const cases = [
+const cases: {
+  key: string;
+  badge: StatusBadgeType;
+  verdict: Verdict;
+  desc: string;
+  caseId: string;
+  hoverBorder: string;
+  gradientVia: string;
+}[] = [
   {
     key: "BananaFax",
     badge: "CRITICAL",
-    verdictEn: "Dead on Arrival",
-    verdictZh: "到达即死亡",
-    descEn: "Random absurdity without symbolic durability.",
-    descZh: "随机荒谬，没有符号持久性。",
-    caseId: "CASE-2024-0412",
+    verdict: "Dead on Arrival",
+    desc: "Random absurdity without symbolic durability.",
+    caseId: "MA-2026-0418",
     hoverBorder: "hover:border-verdict-critical/50",
     gradientVia: "via-verdict-critical/40",
   },
   {
     key: "DogePriest",
     badge: "ACTIVE CASE",
-    verdictEn: "Viral but Fragile",
-    verdictZh: "病毒式但脆弱",
-    descEn: "Strong identity, weak doctrine, fragile long-term conviction.",
-    descZh: "强大的身份认同，薄弱的教义，脆弱的长期信念。",
-    caseId: "CASE-2024-0417",
+    verdict: "Viral but Fragile",
+    desc: "Strong identity, weak doctrine, fragile long-term conviction.",
+    caseId: "MA-2026-0417",
     hoverBorder: "hover:border-verdict-active/50",
     gradientVia: "via-verdict-active/40",
   },
   {
     key: "SaintMeme",
     badge: "HIGH SIGNAL",
-    verdictEn: "Stable Cult Potential",
-    verdictZh: "稳定邪典潜力",
-    descEn: "Mission-driven narrative with repeatable ritual structures.",
-    descZh: "使命驱动的叙事，具有可重复的仪式结构。",
-    caseId: "CASE-2024-0421",
+    verdict: "Stable Cult Potential",
+    desc: "Mission-driven narrative with repeatable ritual structures.",
+    caseId: "MA-2026-0419",
     hoverBorder: "hover:border-verdict-signal/50",
     gradientVia: "via-verdict-signal/40",
   },
 ];
 
 export default function SampleCases({ onSelectCase }: SampleCasesProps) {
-  const { lang } = useI18n();
-
   return (
     <section className="relative py-20 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-14">
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical">
-            // {lang === "zh" ? "案件档案" : "CASE FILES"}
+            // CASE FILES
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold mt-3 mb-4">
-            {lang === "zh" ? "示例案件" : "Sample Cases"}
+            Sample Cases
           </h2>
           <p className="font-body text-forensic-text max-w-xl mx-auto">
-            {lang === "zh"
-              ? "探索跨越 Meme 生命周期谱系的预分析法医报告。"
-              : "Explore pre-analyzed forensic reports across the meme lifecycle spectrum."}
+            Explore pre-analyzed forensic reports across the meme lifecycle spectrum.
           </p>
         </div>
 
@@ -95,18 +93,18 @@ export default function SampleCases({ onSelectCase }: SampleCasesProps) {
 
                 {/* Verdict */}
                 <p className="font-mono text-xs text-forensic-text mb-3">
-                  {lang === "zh" ? c.verdictZh : c.verdictEn}
+                  {c.verdict}
                 </p>
 
                 {/* Description */}
                 <p className="font-body text-sm text-forensic-muted leading-relaxed">
-                  {lang === "zh" ? c.descZh : c.descEn}
+                  {c.desc}
                 </p>
 
                 {/* View report link */}
                 <div className="mt-4 pt-3 border-t border-forensic-border/50">
                   <span className="font-mono text-[10px] tracking-wider uppercase text-forensic-muted group-hover:text-bone transition-colors flex items-center gap-1.5">
-                    {lang === "zh" ? "查看报告" : "View Report"}
+                    View Report
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.3">
                       <path d="M2 5h6M6 3l2 2-2 2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>

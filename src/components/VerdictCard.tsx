@@ -1,111 +1,78 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
-import { zhReportContent } from "@/lib/i18n";
-import type { AutopsyReport } from "@/lib/types";
+import type { Verdict, StatusBadge as StatusBadgeType } from "@/lib/types";
 import StatusBadge from "./StatusBadge";
+import ConfidenceMeter from "./ConfidenceMeter";
 
 interface VerdictCardProps {
-  report: AutopsyReport;
+  verdict: Verdict;
+  confidence: number;
+  primaryCause: string;
+  statusBadge: StatusBadgeType;
 }
 
-export default function VerdictCard({ report }: VerdictCardProps) {
-  const { t, lang } = useI18n();
-  const zhContent = zhReportContent[report.projectName];
+function getVerdictColor(verdict: Verdict): string {
+  switch (verdict) {
+    case "Dead on Arrival":
+    case "Chaos Without Cohesion":
+      return "text-verdict-critical";
+    case "Viral but Fragile":
+    case "Short-Term Attention Trap":
+      return "text-verdict-active";
+    case "Stable Cult Potential":
+    case "High Conviction Meme":
+      return "text-verdict-signal";
+    default:
+      return "text-bone";
+  }
+}
 
-  const primaryCause =
-    lang === "zh" && zhContent ? zhContent.primaryCause : report.primaryCause;
-  const secondaryCauses =
-    lang === "zh" && zhContent
-      ? zhContent.secondaryCauses
-      : report.secondaryCauses;
-  const executiveSummary =
-    lang === "zh" && zhContent
-      ? zhContent.executiveSummary
-      : report.executiveSummary;
+function getAccentColor(verdict: Verdict): string {
+  switch (verdict) {
+    case "Dead on Arrival":
+    case "Chaos Without Cohesion":
+      return "bg-verdict-critical";
+    case "Viral but Fragile":
+    case "Short-Term Attention Trap":
+      return "bg-verdict-active";
+    case "Stable Cult Potential":
+    case "High Conviction Meme":
+      return "bg-verdict-signal";
+    default:
+      return "bg-forensic-border";
+  }
+}
 
+export default function VerdictCard({ verdict, confidence, primaryCause, statusBadge }: VerdictCardProps) {
   return (
     <div className="reveal bg-forensic-panel border border-forensic-border rounded-sm overflow-hidden">
       {/* Top accent bar */}
-      <div
-        className={`h-px ${
-          report.statusBadge === "CRITICAL"
-            ? "bg-verdict-critical"
-            : report.statusBadge === "ACTIVE CASE"
-            ? "bg-verdict-active"
-            : "bg-verdict-signal"
-        }`}
-      />
+      <div className={`h-px ${getAccentColor(verdict)}`} />
 
       <div className="p-6 sm:p-8">
-        {/* Case metadata row */}
-        <div className="flex items-center gap-4 mb-4 pb-4 border-b border-forensic-border/50">
-          <span className="font-mono text-[9px] tracking-[0.15em] text-forensic-muted">
-            CASE-{report.projectName === "DogePriest" ? "2024-0417" : report.projectName === "BananaFax" ? "2024-0412" : report.projectName === "SaintMeme" ? "2024-0421" : `${Date.now().toString(36).toUpperCase()}`}
-          </span>
-          <span className="text-forensic-border">|</span>
-          <span className="font-mono text-[9px] tracking-wider text-forensic-muted">
-            {report.projectName === "DogePriest" ? "2024-04-17T09:42:00Z" : report.projectName === "BananaFax" ? "2024-04-12T14:18:00Z" : report.projectName === "SaintMeme" ? "2024-04-21T11:05:00Z" : new Date().toISOString().split(".")[0] + "Z"}
-          </span>
-          <span className="text-forensic-border">|</span>
-          <span className="font-mono text-[9px] tracking-wider text-forensic-muted">
-            ENGINE v1.0
-          </span>
-        </div>
-
-        {/* Project name + Badge */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-          <h3 className="font-mono text-2xl sm:text-3xl font-bold text-bone tracking-tight">
-            {report.projectName}
-          </h3>
-          <StatusBadge badge={report.statusBadge} />
-        </div>
-
-        {/* Verdict */}
-        <div className="mb-6 pb-6 border-b border-forensic-border">
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-            {t("report.verdict")}
-          </span>
-          <p className="font-display text-xl sm:text-2xl font-semibold mt-1 text-bone">
-            {t(`verdict.${report.verdict}`)}
-          </p>
+        {/* Badge + Verdict */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
+                VERDICT
+              </span>
+              <StatusBadge badge={statusBadge} />
+            </div>
+            <p className={`font-display text-2xl sm:text-3xl font-bold ${getVerdictColor(verdict)}`}>
+              {verdict}
+            </p>
+          </div>
+          <ConfidenceMeter confidence={confidence} />
         </div>
 
         {/* Primary cause */}
-        <div className="mb-6">
+        <div className="pt-5 border-t border-forensic-border">
           <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-            {t("report.primaryCause")}
+            PRIMARY CAUSE
           </span>
-          <p className="font-body text-base text-bone/90 mt-1">
+          <p className="font-body text-base text-bone/90 mt-1 leading-relaxed">
             {primaryCause}
-          </p>
-        </div>
-
-        {/* Secondary causes */}
-        <div className="mb-6">
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-            {t("report.secondaryCauses")}
-          </span>
-          <ul className="mt-2 space-y-2">
-            {secondaryCauses.map((cause, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2 font-body text-sm text-forensic-text"
-              >
-                <span className="text-verdict-critical mt-0.5 text-xs">&#9654;</span>
-                {cause}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Executive summary */}
-        <div className="pt-6 border-t border-forensic-border">
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-            {t("report.executiveSummary")}
-          </span>
-          <p className="font-body text-sm text-forensic-text leading-relaxed mt-2">
-            {executiveSummary}
           </p>
         </div>
       </div>

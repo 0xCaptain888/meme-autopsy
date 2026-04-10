@@ -1,9 +1,12 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-export default function Navbar({ onNewCase }: { onNewCase?: () => void }) {
+interface NavbarProps {
+  onNewCase?: () => void;
+}
+
+export default function Navbar({ onNewCase }: NavbarProps) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 border-b border-forensic-border/50 bg-forensic-black/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
@@ -35,14 +38,12 @@ export default function Navbar({ onNewCase }: { onNewCase?: () => void }) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {onNewCase && (
-            <button
-              onClick={onNewCase}
-              className="hidden sm:block font-mono text-xs text-forensic-text hover:text-bone transition-colors"
-            >
-              + NEW CASE
-            </button>
-          )}
+          <button
+            onClick={onNewCase}
+            className="hidden sm:block font-mono text-xs text-forensic-text hover:text-bone transition-colors"
+          >
+            + NEW CASE
+          </button>
           <LanguageSwitcher />
         </div>
       </div>

@@ -1,53 +1,49 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
-import { zhReportContent } from "@/lib/i18n";
-import type { AutopsyReport } from "@/lib/types";
+import type { TimelineItem } from "@/lib/types";
 
 interface TimelineProps {
-  report: AutopsyReport;
+  timeline: TimelineItem[];
 }
 
 const phaseIcons = [
-  // Initial Hook
   <svg key="0" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.5"/></svg>,
-  // Social Spread
   <svg key="1" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M4 6l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-  // Identity Formation
   <svg key="2" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="8" height="8" stroke="currentColor" strokeWidth="1.5"/></svg>,
-  // Fatigue Trigger
   <svg key="3" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  // Belief Collapse
   <svg key="4" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/></svg>,
 ];
 
-const riskLevels = ["LOW", "MODERATE", "ELEVATED", "HIGH", "CRITICAL"];
-
-function getRiskColor(index: number): string {
-  if (index <= 1) return "text-verdict-signal border-verdict-signal/30";
-  if (index === 2) return "text-verdict-active border-verdict-active/30";
-  return "text-verdict-critical border-verdict-critical/30";
+function getRiskColor(level?: string): string {
+  switch (level) {
+    case "LOW":
+      return "text-verdict-signal border-verdict-signal/30";
+    case "MODERATE":
+      return "text-verdict-active border-verdict-active/30";
+    case "ELEVATED":
+      return "text-orange-400 border-orange-400/30";
+    case "HIGH":
+      return "text-verdict-critical border-verdict-critical/30";
+    case "CRITICAL":
+      return "text-red-400 border-red-400/30 bg-red-400/5";
+    default:
+      return "text-forensic-muted border-forensic-border";
+  }
 }
 
-export default function Timeline({ report }: TimelineProps) {
-  const { t, lang } = useI18n();
-  const zhContent = zhReportContent[report.projectName];
-
-  const timelineItems =
-    lang === "zh" && zhContent ? zhContent.timeline : report.timeline;
-
+export default function Timeline({ timeline }: TimelineProps) {
   return (
     <div className="reveal" style={{ animationDelay: "0.2s" }}>
       {/* Section header */}
       <div className="mb-8">
         <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical">
-          // LIFECYCLE PROJECTION
+          // COLLAPSE TIMELINE
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          {t("timeline.title")}
+          Lifecycle Projection
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          {t("timeline.subtitle")}
+          Projected failure points across the lifecycle of narrative attention and belief formation.
         </p>
       </div>
 
@@ -57,44 +53,39 @@ export default function Timeline({ report }: TimelineProps) {
         <div className="absolute left-[19px] top-0 bottom-0 w-px bg-gradient-to-b from-forensic-border via-verdict-critical/40 to-forensic-border" />
 
         <div className="space-y-1">
-          {timelineItems.map((item, i) => {
-            const phaseKey = report.timeline[i]?.phase || item.phase;
-            return (
-              <div
-                key={i}
-                className="reveal relative flex gap-5 group"
-                style={{ animationDelay: `${0.25 + i * 0.1}s` }}
-              >
-                {/* Node */}
-                <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full border border-forensic-border bg-forensic-dark flex items-center justify-center group-hover:border-verdict-critical/50 transition-colors">
-                  <span className="text-forensic-muted group-hover:text-verdict-critical transition-colors">
-                    {phaseIcons[i]}
-                  </span>
-                </div>
+          {timeline.map((item, i) => (
+            <div
+              key={i}
+              className="reveal relative flex gap-5 group"
+              style={{ animationDelay: `${0.25 + i * 0.1}s` }}
+            >
+              {/* Node */}
+              <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full border border-forensic-border bg-forensic-dark flex items-center justify-center group-hover:border-verdict-critical/50 transition-colors">
+                <span className="text-forensic-muted group-hover:text-verdict-critical transition-colors">
+                  {phaseIcons[i] || phaseIcons[0]}
+                </span>
+              </div>
 
-                {/* Content */}
-                <div className="flex-1 pb-8">
-                  <div className="bg-forensic-panel border border-forensic-border rounded-sm p-5 group-hover:border-forensic-muted/40 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-mono text-xs tracking-wider uppercase text-bone font-medium">
-                        {lang === "zh" ? item.phase : t(`phase.${phaseKey}`)}
+              {/* Content */}
+              <div className="flex-1 pb-8">
+                <div className="bg-forensic-panel border border-forensic-border rounded-sm p-5 group-hover:border-forensic-muted/40 transition-colors">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-xs tracking-wider uppercase text-bone font-medium">
+                      {item.phase}
+                    </span>
+                    {item.riskLevel && (
+                      <span className={`font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 border rounded-sm ${getRiskColor(item.riskLevel)}`}>
+                        {item.riskLevel}
                       </span>
-                      <span
-                        className={`font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 border rounded-sm ${getRiskColor(
-                          i
-                        )}`}
-                      >
-                        {riskLevels[i]}
-                      </span>
-                    </div>
-                    <p className="font-body text-sm text-forensic-text leading-relaxed">
-                      {item.diagnosis}
-                    </p>
+                    )}
                   </div>
+                  <p className="font-body text-sm text-forensic-text leading-relaxed">
+                    {item.diagnosis}
+                  </p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </div>

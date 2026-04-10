@@ -1,32 +1,22 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
-import { zhReportContent } from "@/lib/i18n";
-import type { AutopsyReport } from "@/lib/types";
-
-interface InterventionListProps {
-  report: AutopsyReport;
+interface InterventionPanelProps {
+  interventions: string[];
 }
 
-export default function InterventionList({ report }: InterventionListProps) {
-  const { t, lang } = useI18n();
-  const zhContent = zhReportContent[report.projectName];
-
-  const interventions =
-    lang === "zh" && zhContent ? zhContent.interventions : report.interventions;
-
+export default function InterventionPanel({ interventions }: InterventionPanelProps) {
   return (
     <div className="reveal" style={{ animationDelay: "0.3s" }}>
       {/* Section header */}
       <div className="mb-8">
         <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-active">
-          // RECOMMENDED ACTIONS
+          // RECOMMENDED INTERVENTIONS
         </span>
         <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 mb-2">
-          {t("interventions.title")}
+          Recovery Actions
         </h3>
         <p className="font-body text-forensic-text text-sm">
-          {t("interventions.subtitle")}
+          Specific actions to increase symbolic durability, community cohesion, and long-term survivability.
         </p>
       </div>
 
