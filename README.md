@@ -4,7 +4,7 @@
 
 Meme Autopsy diagnoses why meme narratives go viral, decay, or die.
 
-**Live Demo:** [https://c78jy47b.mule.page](https://c78jy47b.mule.page/)
+**Live Demo:** [https://73qyf3ly.mule.page](https://73qyf3ly.mule.page/)
 
 ![Homepage](public/screenshots/hero.png)
 
