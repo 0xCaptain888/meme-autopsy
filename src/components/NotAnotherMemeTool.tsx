@@ -1,6 +1,13 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 export default function NotAnotherMemeTool() {
+  const { t } = useI18n();
+
+  const otherKeys = ["distinction.other.1", "distinction.other.2", "distinction.other.3"];
+  const maKeys = ["distinction.ma.1", "distinction.ma.2", "distinction.ma.3"];
+
   return (
     <section className="relative py-20 px-4">
       <div className="max-w-4xl mx-auto">
@@ -19,11 +26,11 @@ export default function NotAnotherMemeTool() {
             </span>
 
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-bone mb-5">
-              Not another meme tool
+              {t("distinction.title")}
             </h3>
 
             <p className="font-body text-base sm:text-lg text-forensic-text leading-relaxed max-w-2xl mx-auto mb-8">
-              Meme Autopsy does not classify mood. It diagnoses symbolic density, lore depth, ritual repeatability, community cohesion, belief elasticity, and narrative survivability.
+              {t("distinction.desc")}
             </p>
 
             {/* Comparison grid */}
@@ -33,12 +40,12 @@ export default function NotAnotherMemeTool() {
                   OTHER TOOLS
                 </span>
                 <ul className="space-y-1.5 text-left">
-                  {["Generate content", "Track price", "Analyze sentiment"].map((item, i) => (
+                  {otherKeys.map((key, i) => (
                     <li key={i} className="flex items-center gap-2 font-body text-xs text-forensic-muted">
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                         <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                       </svg>
-                      {item}
+                      {t(key)}
                     </li>
                   ))}
                 </ul>
@@ -48,16 +55,12 @@ export default function NotAnotherMemeTool() {
                   MEME AUTOPSY
                 </span>
                 <ul className="space-y-1.5 text-left">
-                  {[
-                    "Diagnose narrative structure",
-                    "Analyze symbolic density",
-                    "Predict belief collapse",
-                  ].map((item, i) => (
+                  {maKeys.map((key, i) => (
                     <li key={i} className="flex items-center gap-2 font-body text-xs text-bone/80">
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                         <path d="M2 5l2.5 2.5L8 3" stroke="#dc2626" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      {item}
+                      {t(key)}
                     </li>
                   ))}
                 </ul>

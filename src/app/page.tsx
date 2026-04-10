@@ -157,10 +157,10 @@ export default function Home() {
         >
           {view === "landing" && (
             <>
-              <Hero onRunAutopsy={goToWorkspace} onViewSample={handleViewSample} />
+              <Hero onViewSample={handleViewSample} />
               <SampleAutopsyPreview onViewFullReport={handleViewSample} />
               <FrameworkGrid />
-              <InputDemoCTA onStartAnalysis={goToWorkspace} />
+              <InputDemoCTA />
               <div id="sample-cases">
                 <SampleCases onSelectCase={handleSelectSample} />
               </div>

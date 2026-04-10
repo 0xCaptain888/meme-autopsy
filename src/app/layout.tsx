@@ -2,23 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Meme Autopsy — AI Forensic Intelligence for Meme Narratives",
+  title: "Meme Autopsy — BSC Forensic Intelligence for Meme Narratives",
   description:
-    "An AI-powered forensic engine that dissects meme project narratives across six structural dimensions to diagnose virality, cultural survivability, and collapse risk.",
+    "AI-powered forensic analysis for BSC meme projects. Ingests live data from DexScreener, BscScan, and four.meme. Delivers structured verdicts with explicit provenance.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "Meme Autopsy — AI Forensic Intelligence for Meme Narratives",
+    title: "Meme Autopsy — BSC Forensic Intelligence for Meme Narratives",
     description:
-      "Dissect any meme project across symbolic density, lore depth, ritual repeatability, community cohesion, belief elasticity, and narrative survivability.",
+      "AI-powered forensic analysis for BSC meme projects. Ingests live data from DexScreener, BscScan, and four.meme. Delivers structured verdicts with explicit provenance.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meme Autopsy — Forensic Intelligence Engine",
+    title: "Meme Autopsy — BSC Forensic Intelligence",
     description:
-      "AI-powered narrative forensics for meme projects. From hype to collapse, every meme leaves evidence.",
+      "AI-powered forensic analysis for BSC meme projects. Ingests live data from DexScreener, BscScan, and four.meme. Delivers structured verdicts with explicit provenance.",
   },
 };
 

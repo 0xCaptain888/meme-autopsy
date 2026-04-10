@@ -1,12 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
-interface InputDemoCTAProps {
-  onStartAnalysis: () => void;
-}
-
-export default function InputDemoCTA({ onStartAnalysis }: InputDemoCTAProps) {
+export default function InputDemoCTA() {
   const { t } = useI18n();
   return (
     <section className="relative py-20 px-4">
@@ -26,8 +23,8 @@ export default function InputDemoCTA({ onStartAnalysis }: InputDemoCTAProps) {
           {t("inputCTA.subtitle")}
         </p>
 
-        <button
-          onClick={onStartAnalysis}
+        <Link
+          href="/analyze"
           className="group relative inline-flex items-center gap-3 px-10 py-4 bg-verdict-active text-white font-mono text-sm font-medium tracking-wider uppercase rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-verdict-active/20"
         >
           <span className="relative z-10">{t("inputCTA.button")}</span>
@@ -41,7 +38,7 @@ export default function InputDemoCTA({ onStartAnalysis }: InputDemoCTAProps) {
             <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-        </button>
+        </Link>
 
         {/* Decorative bottom line */}
         <div className="w-12 h-px bg-forensic-border mx-auto mt-10" />

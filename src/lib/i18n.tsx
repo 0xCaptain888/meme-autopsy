@@ -8,19 +8,26 @@ type TranslationDict = Record<string, Record<string, string>>;
 const translations: TranslationDict = {
   // Hero
   "hero.headline": {
-    en: "Dissect the life and death of any meme project",
-    zh: "解剖任何 Meme 项目的生与死",
+    en: "AI Forensic Intelligence for BSC Meme Narratives",
+    zh: "BSC Meme 叙事的 AI 法医情报",
   },
   "hero.subheadline": {
-    en: "Meme Autopsy is an AI forensic engine that diagnoses why meme narratives go viral, decay, or die.",
-    zh: "Meme Autopsy 是一个 AI 法医引擎，诊断 Meme 叙事为何会病毒传播、衰退或死亡。",
+    en: "Ingests live data from DexScreener, BscScan, and four.meme. Extracts narrative structure. Delivers structured forensic verdicts.",
+    zh: "从 DexScreener、BscScan 和 four.meme 获取实时数据。提取叙事结构。提供结构化法医判定。",
   },
   "hero.supporting": {
-    en: "From hype to collapse, every meme leaves evidence.",
-    zh: "从炒作到崩溃，每个 Meme 都会留下证据。",
+    en: "BSC-first. four.meme-first. Real chain data, not vibes.",
+    zh: "BSC 优先。four.meme 优先。真实链上数据，而非臆测。",
   },
-  "hero.runAutopsy": { en: "Run Autopsy", zh: "执行尸检" },
+  "hero.runAutopsy": { en: "Analyze Contract", zh: "分析合约" },
   "hero.loadSample": { en: "View Sample Report", zh: "查看示例报告" },
+
+  // Source Badges
+  "source.dexscreener": { en: "DexScreener", zh: "DexScreener" },
+  "source.bscscan": { en: "BscScan", zh: "BscScan" },
+  "source.fourmeme": { en: "four.meme", zh: "four.meme" },
+  "source.openai": { en: "OpenAI", zh: "OpenAI" },
+  "source.label": { en: "LIVE DATA SOURCES", zh: "实时数据来源" },
 
   // Framework Grid (dimensions)
   "framework.title": { en: "The Six Forensic Dimensions", zh: "六大法医维度" },
@@ -60,12 +67,12 @@ const translations: TranslationDict = {
   },
 
   // Input Demo CTA
-  "inputCTA.title": { en: "Ready to Run Your Own Autopsy?", zh: "准备执行你自己的尸检？" },
+  "inputCTA.title": { en: "Ready to Analyze a BSC Contract?", zh: "准备分析 BSC 合约？" },
   "inputCTA.subtitle": {
-    en: "Submit any meme project's narrative, community language, and context for a full forensic analysis.",
-    zh: "提交任何 Meme 项目的叙事、社区语言和上下文进行完整法医分析。",
+    en: "Paste any BSC contract address to get a full forensic diagnosis with live data from DexScreener, BscScan, and four.meme.",
+    zh: "粘贴任何 BSC 合约地址，获取来自 DexScreener、BscScan 和 four.meme 实时数据的完整法医诊断。",
   },
-  "inputCTA.button": { en: "Open Workspace", zh: "打开工作台" },
+  "inputCTA.button": { en: "Analyze a BSC Contract", zh: "分析 BSC 合约" },
 
   // Sample Cases
   "samples.title": { en: "Sample Cases", zh: "示例案件" },
@@ -199,13 +206,44 @@ const translations: TranslationDict = {
 
   // Nav
   "nav.title": { en: "MEME AUTOPSY", zh: "MEME AUTOPSY" },
-  "nav.tagline": { en: "Forensic Intelligence Engine", zh: "法医情报引擎" },
+  "nav.tagline": { en: "BSC Forensic Intelligence", zh: "BSC 法医情报" },
 
   // Footer
   "footer.text": {
-    en: "Meme Autopsy \u2014 Forensic Intelligence for Internet-Native Assets",
-    zh: "Meme Autopsy \u2014 互联网原生资产的法医情报",
+    en: "Meme Autopsy \u2014 AI Forensic Intelligence for BSC Meme Narratives",
+    zh: "Meme Autopsy \u2014 BSC Meme 叙事的 AI 法医情报",
   },
+
+  // HowItWorks
+  "howItWorks.title": { en: "Forensic diagnosis in three steps", zh: "三步法医诊断" },
+  "howItWorks.step1.title": { en: "Paste a BSC contract address", zh: "粘贴 BSC 合约地址" },
+  "howItWorks.step1.desc": {
+    en: "Input any BSC token contract address. The engine identifies the project and begins data ingestion.",
+    zh: "输入任何 BSC 代币合约地址。引擎识别项目并开始数据摄取。",
+  },
+  "howItWorks.step2.title": { en: "Live data ingestion & analysis", zh: "实时数据摄取与分析" },
+  "howItWorks.step2.desc": {
+    en: "Live market, holder, and narrative data ingestion from DexScreener, BscScan, and four.meme.",
+    zh: "从 DexScreener、BscScan 和 four.meme 摄取实时市场、持有者和叙事数据。",
+  },
+  "howItWorks.step3.title": { en: "Structured forensic verdict", zh: "结构化法医判定" },
+  "howItWorks.step3.desc": {
+    en: "Structured forensic verdict with data provenance, warning flags, and missing-data disclosure.",
+    zh: "结构化法医判定，附带数据来源、警告标志和缺失数据披露。",
+  },
+
+  // NotAnotherMemeTool
+  "distinction.title": { en: "Not another meme tool", zh: "不只是另一个 Meme 工具" },
+  "distinction.desc": {
+    en: "Meme Autopsy is built on real chain data from BSC, not vibes. Every data point shows its source. When data is missing, we say so.",
+    zh: "Meme Autopsy 基于 BSC 的真实链上数据构建，而非臆测。每个数据点都显示其来源。当数据缺失时，我们会如实告知。",
+  },
+  "distinction.other.1": { en: "Black box AI", zh: "黑箱 AI" },
+  "distinction.other.2": { en: "Always 100% confident", zh: "始终 100% 自信" },
+  "distinction.other.3": { en: "Generic multi-chain", zh: "通用多链" },
+  "distinction.ma.1": { en: "Shows where data came from", zh: "显示数据来源" },
+  "distinction.ma.2": { en: "Admits when data is missing", zh: "承认数据缺失" },
+  "distinction.ma.3": { en: "BSC-first, four.meme-first", zh: "BSC 优先，four.meme 优先" },
 };
 
 interface I18nContextType {
