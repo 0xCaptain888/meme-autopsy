@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { ForensicReport } from "@/types/domain";
 import AnalyzeLoader from "@/components/analyze/AnalyzeLoader";
 import CaseReport from "@/components/analyze/CaseReport";
@@ -74,7 +75,38 @@ export default function AnalyzePage() {
 
   return (
     <div className="min-h-screen bg-forensic-black text-bone scanline-overlay noise-bg">
-      <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* ─── Top nav bar ─── */}
+      <nav className="sticky top-0 z-40 border-b border-forensic-border/50 bg-forensic-black/90 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-mono text-sm text-forensic-text hover:text-bone transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="hidden sm:inline">Back to Home</span>
+            </Link>
+            <span className="text-forensic-border mx-2 hidden sm:inline">|</span>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 border border-verdict-critical/60 rounded-sm flex items-center justify-center">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" className="text-verdict-critical">
+                  <path d="M7 1v12M1 7h12M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <span className="font-mono text-sm font-semibold tracking-widest text-bone">
+                MEME AUTOPSY
+              </span>
+            </div>
+          </div>
+          <span className="font-mono text-[10px] tracking-wider text-forensic-muted uppercase hidden sm:block">
+            BSC Forensic Intelligence
+          </span>
+        </div>
+      </nav>
+
+      <div className="flex flex-col lg:flex-row" style={{ minHeight: "calc(100vh - 56px)" }}>
         {/* ─── Left panel: Input form ─── */}
         <div className="w-full lg:w-[420px] xl:w-[460px] flex-shrink-0 border-b lg:border-b-0 lg:border-r border-forensic-border input-panel-container overflow-y-auto">
           <div className="p-6">
