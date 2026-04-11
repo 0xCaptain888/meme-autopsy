@@ -1,9 +1,12 @@
-import { useState, useCallback } from "react";
-import { I18nProvider } from "@/lib/i18n";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import type { AppView, AutopsyReport, FormData } from "@/lib/types";
 import { sampleReports, sampleInputs } from "@/data/sampleCases";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import WorkflowSection from "@/components/WorkflowSection";
+import EvidenceSourcesSection from "@/components/EvidenceSourcesSection";
 import SampleAutopsyPreview from "@/components/SampleAutopsyPreview";
 import ExaminationProtocol from "@/components/ExaminationProtocol";
 import ArchivedCaseFiles from "@/components/ArchivedCaseFiles";
@@ -13,8 +16,8 @@ import EmptyReportState from "@/components/EmptyReportState";
 import ExaminationLoader from "@/components/ExaminationLoader";
 import AutopsyReportView from "@/components/AutopsyReportView";
 
-// GitHub Sync Test - v2.0.1
 const Index = () => {
+  const location = useLocation();
   const [view, setView] = useState<AppView>("landing");
   const [formData, setFormData] = useState<FormData>({
     contractAddress: "",
@@ -24,6 +27,24 @@ const Index = () => {
   const [currentReport, setCurrentReport] = useState<AutopsyReport | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [rightPanel, setRightPanel] = useState<"empty" | "loading" | "report">("empty");
+
+  // Handle navigation state from archive page
+  useEffect(() => {
+    const state = location.state as { viewCase?: string } | null;
+    if (state?.viewCase) {
+      const key = state.viewCase;
+      const report = sampleReports[key];
+      const input = sampleInputs[key];
+      if (report) {
+        setCurrentReport(report);
+        if (input) setFormData(input);
+        setView("workspace");
+        setRightPanel("report");
+      }
+      // Clear the state so refresh doesn't re-trigger
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const goToLanding = useCallback(() => {
     setView("landing");
@@ -42,18 +63,10 @@ const Index = () => {
   const runAnalysis = useCallback((data: FormData) => {
     setRightPanel("loading");
     setIsAnalyzing(true);
-
-    // Try to match sample cases by contract address or find closest match
     const matchKey = Object.keys(sampleInputs).find(
       (k) => sampleInputs[k].contractAddress === data.contractAddress
     );
-
-    if (matchKey) {
-      setCurrentReport(sampleReports[matchKey]);
-    } else {
-      // Default to DogePriest as fallback demo
-      setCurrentReport(sampleReports["DogePriest"]);
-    }
+    setCurrentReport(sampleReports[matchKey || "DogePriest"]);
   }, []);
 
   const handleSelectSample = useCallback((key: string) => {
@@ -85,55 +98,53 @@ const Index = () => {
   }, [formData, runAnalysis]);
 
   const handleLoadingComplete = useCallback(() => {
-    if (currentReport) {
-      setRightPanel("report");
-    }
+    if (currentReport) setRightPanel("report");
     setIsAnalyzing(false);
   }, [currentReport]);
 
   return (
-    <I18nProvider>
-      <div className="min-h-screen bg-background scanline-overlay noise-bg">
-        <Navbar onNewCase={view === "workspace" ? goToLanding : undefined} />
+    <div className="min-h-screen bg-background scanline-overlay noise-bg">
+      <Navbar onNewCase={view === "workspace" ? goToLanding : undefined} />
 
-        <div key={view} className="animate-fade-in">
-          {view === "landing" && (
-            <>
-              <Hero onOpenCase={goToWorkspace} onViewArchived={handleViewSample} />
-              <SampleAutopsyPreview onViewFullReport={handleViewSample} />
-              <ExaminationProtocol />
-              <div id="archived-cases">
-                <ArchivedCaseFiles onSelectCase={handleSelectSample} />
-              </div>
-              <ThesisBlock />
-            </>
-          )}
+      <div key={view} className="animate-fade-in">
+        {view === "landing" && (
+          <>
+            <Hero onOpenCase={goToWorkspace} onViewArchived={handleViewSample} />
+            <WorkflowSection />
+            <EvidenceSourcesSection />
+            <SampleAutopsyPreview onViewFullReport={handleViewSample} />
+            <ExaminationProtocol />
+            <div id="archived-cases">
+              <ArchivedCaseFiles onSelectCase={handleSelectSample} />
+            </div>
+            <ThesisBlock />
+          </>
+        )}
 
-          {view === "workspace" && (
-            <div className="flex h-screen pt-14">
-              <div className="w-full md:w-[420px] md:min-w-[420px] border-r border-forensic-border overflow-y-auto workspace-scroll-panel">
-                <CaseIntakePanel
-                  formData={formData}
-                  onChange={setFormData}
-                  onSubmit={handleSubmit}
-                  isAnalyzing={isAnalyzing}
-                  onBack={goToLanding}
-                />
-              </div>
-              <div className="hidden md:flex flex-1 overflow-y-auto workspace-scroll-panel">
-                <div className="flex-1">
-                  {rightPanel === "empty" && <EmptyReportState />}
-                  {rightPanel === "loading" && <ExaminationLoader onComplete={handleLoadingComplete} />}
-                  {rightPanel === "report" && currentReport && (
-                    <AutopsyReportView report={currentReport} onReopen={() => runAnalysis(formData)} />
-                  )}
-                </div>
+        {view === "workspace" && (
+          <div className="flex h-screen pt-14">
+            <div className="w-full md:w-[420px] md:min-w-[420px] border-r border-forensic-border overflow-y-auto workspace-scroll-panel">
+              <CaseIntakePanel
+                formData={formData}
+                onChange={setFormData}
+                onSubmit={handleSubmit}
+                isAnalyzing={isAnalyzing}
+                onBack={goToLanding}
+              />
+            </div>
+            <div className="hidden md:flex flex-1 overflow-y-auto workspace-scroll-panel">
+              <div className="flex-1">
+                {rightPanel === "empty" && <EmptyReportState />}
+                {rightPanel === "loading" && <ExaminationLoader onComplete={handleLoadingComplete} />}
+                {rightPanel === "report" && currentReport && (
+                  <AutopsyReportView report={currentReport} onReopen={() => runAnalysis(formData)} />
+                )}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </I18nProvider>
+    </div>
   );
 };
 

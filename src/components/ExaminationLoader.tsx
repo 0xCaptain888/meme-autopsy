@@ -1,154 +1,174 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
-
-const examinationStages = [
-  "loading.intake",
-  "loading.validating",
-  "loading.accepted",
-  "loading.assigningId",
-  "loading.securingFourmeme",
-  "loading.securingDex",
-  "loading.securingBsc",
-  "loading.verifyingChain",
-  "loading.externalExam",
-  "loading.catalogingMarkings",
-  "loading.internalExam",
-  "loading.parsingNarrative",
-  "loading.evaluatingIntegrity",
-  "loading.toxicology",
-  "loading.degenerative",
-  "loading.viralityRecon",
-  "loading.deathRecon",
-  "loading.stageOfDecay",
-  "loading.probableCause",
-  "loading.mannerOfDeath",
-  "loading.draftingOpinion",
-  "loading.opinionIssued",
-];
+import {
+  EXAMINATION_STAGES,
+  getInitialSourceAcquisition,
+  type SourceAcquisitionRecord,
+} from "@/lib/examinationStateMachine";
+import ExaminationStageTracker from "./examination/ExaminationStageTracker";
+import SourceAcquisitionPanel from "./examination/SourceAcquisitionPanel";
 
 interface ExaminationLoaderProps {
   onComplete: () => void;
 }
 
 export default function ExaminationLoader({ onComplete }: ExaminationLoaderProps) {
-  const { t } = useI18n();
-  const [currentStage, setCurrentStage] = useState(0);
+  const { lang } = useI18n();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [sources, setSources] = useState<SourceAcquisitionRecord[]>(getInitialSourceAcquisition);
+  const [messageLog, setMessageLog] = useState<string[]>([]);
+
+  const currentStage = EXAMINATION_STAGES[currentIndex];
+  const isComplete = currentIndex >= EXAMINATION_STAGES.length;
+  const progress = Math.min((currentIndex / EXAMINATION_STAGES.length) * 100, 100);
+
+  // Simulate source acquisition when entering securing_evidence
+  const updateSources = useCallback((stageId: string) => {
+    if (stageId === "securing_evidence") {
+      // Simulate sequential acquisition
+      const timers: ReturnType<typeof setTimeout>[] = [];
+      const updates: [number, string, SourceAcquisitionRecord["status"]][] = [
+        [200, "four.meme", "acquiring"],
+        [600, "four.meme", "acquired"],
+        [700, "DexScreener", "acquiring"],
+        [1200, "DexScreener", "acquired"],
+        [1300, "BscScan", "acquiring"],
+        [1800, "BscScan", "partial"],
+        [1900, "Narrative Record", "acquiring"],
+        [2200, "Narrative Record", "acquired"],
+      ];
+      updates.forEach(([delay, name, status]) => {
+        timers.push(
+          setTimeout(() => {
+            setSources((prev) =>
+              prev.map((s) => (s.name === name ? { ...s, status } : s))
+            );
+          }, delay)
+        );
+      });
+      // Scene notes provided immediately
+      setTimeout(() => {
+        setSources((prev) =>
+          prev.map((s) => (s.name === "Scene Notes" ? { ...s, status: "acquired" } : s))
+        );
+      }, 100);
+      return () => timers.forEach(clearTimeout);
+    }
+  }, []);
 
   useEffect(() => {
-    if (currentStage >= examinationStages.length) {
+    if (isComplete) {
       onComplete();
       return;
     }
-    // Variable timing to simulate real forensic work
-    const delays = [800, 600, 400, 500, 1200, 1000, 1000, 600, 1200, 800, 1200, 1000, 800, 1000, 800, 1200, 1200, 600, 800, 600, 1000, 500];
-    const delay = delays[currentStage] || 700;
-    const timer = setTimeout(() => setCurrentStage((s) => s + 1), delay);
-    return () => clearTimeout(timer);
-  }, [currentStage, onComplete]);
 
-  const progress = Math.min((currentStage / examinationStages.length) * 100, 100);
+    const stage = EXAMINATION_STAGES[currentIndex];
+    const msg = lang === "zh" ? stage.systemMessageZh : stage.systemMessage;
+    setMessageLog((prev) => [...prev, msg]);
+
+    const cleanup = updateSources(stage.id);
+    const timer = setTimeout(() => setCurrentIndex((i) => i + 1), stage.duration);
+
+    return () => {
+      clearTimeout(timer);
+      cleanup?.();
+    };
+  }, [currentIndex, isComplete, onComplete, lang, updateSources]);
+
+  const stageLabels = EXAMINATION_STAGES.map((s) => ({
+    id: s.id,
+    label: lang === "zh" ? s.labelZh : s.label,
+  }));
 
   return (
-    <div className="flex flex-col items-center justify-center h-full min-h-[60vh] p-8">
-      <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 border border-verdict-critical/40 rounded-full flex items-center justify-center scan-pulse">
-            <svg width="24" height="24" viewBox="0 0 14 14" fill="none" className="text-verdict-critical">
-              <path d="M7 1v12M1 7h12M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    <div className="flex flex-col h-full p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 border border-verdict-critical/40 rounded-full flex items-center justify-center scan-pulse">
+            <svg width="16" height="16" viewBox="0 0 14 14" fill="none" className="text-verdict-critical">
+              <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
             </svg>
           </div>
-          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical block mb-2">
-            // FORENSIC EXAMINATION
-          </span>
-          <h3 className="font-display text-xl font-bold text-bone">Examination in Progress</h3>
+          <div>
+            <span className="font-mono text-[9px] tracking-[0.3em] uppercase text-verdict-critical block">
+              // FORENSIC EXAMINATION
+            </span>
+            <h3 className="font-display text-lg font-bold text-bone">Examination in Progress</h3>
+          </div>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full h-1 bg-forensic-panel rounded-full overflow-hidden mb-6">
+        <div className="w-full h-1 bg-forensic-dark rounded-full overflow-hidden">
           <div
             className="h-full bg-verdict-active rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
+        <div className="flex justify-between mt-1">
+          <span className="font-mono text-[9px] text-forensic-muted">
+            {currentStage ? (lang === "zh" ? currentStage.labelZh : currentStage.label) : "Complete"}
+          </span>
+          <span className="font-mono text-[9px] text-forensic-muted">{Math.round(progress)}%</span>
+        </div>
+      </div>
 
-        {/* Stage list */}
-        <div className="space-y-1.5 max-h-[400px] overflow-y-auto workspace-scroll-panel">
-          {examinationStages.map((stage, i) => {
-            const isComplete = i < currentStage;
-            const isActive = i === currentStage;
-            const isPending = i > currentStage;
+      <div className="flex-1 overflow-y-auto workspace-scroll-panel space-y-5">
+        {/* Two-column: Stage Tracker + Source Panel */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Stage Tracker */}
+          <div className="bg-forensic-panel border border-forensic-border rounded-sm p-4">
+            <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-3">
+              EXAMINATION STAGES
+            </span>
+            <ExaminationStageTracker stages={stageLabels} currentIndex={currentIndex} />
+          </div>
 
-            return (
-              <div
-                key={stage}
-                className={`flex items-center gap-3 px-3 py-2 rounded-sm transition-all duration-300 ${
-                  isActive ? "bg-forensic-panel border border-forensic-border" :
-                  isComplete ? "opacity-60" : "opacity-30"
-                }`}
-              >
-                {/* Status icon */}
-                <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                  {isComplete && (
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <path d="M3 7l3 3 5-5" stroke="hsl(var(--verdict-signal))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-verdict-active animate-pulse" />
-                  )}
-                  {isPending && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-forensic-border" />
-                  )}
-                </div>
-                <span className={`font-mono text-xs tracking-wider ${
-                  isActive ? "text-verdict-active" :
-                  isComplete ? "text-forensic-text" : "text-forensic-muted"
-                }`}>
-                  {t(stage)}
+          {/* Source Acquisition */}
+          <div className="space-y-4">
+            <SourceAcquisitionPanel sources={sources} />
+
+            {/* Degraded evidence warning */}
+            {sources.some((s) => s.status === "partial" || s.status === "unavailable") && currentIndex >= 4 && (
+              <div className="bg-verdict-active/5 border border-verdict-active/20 rounded-sm p-3">
+                <span className="font-mono text-[9px] tracking-wider uppercase text-verdict-active block mb-1">
+                  ⚠ DEGRADED EVIDENCE
                 </span>
+                <p className="font-mono text-[10px] text-forensic-muted leading-relaxed">
+                  {sources
+                    .filter((s) => s.status === "partial" || s.status === "unavailable")
+                    .map((s) => s.name)
+                    .join(", ")}{" "}
+                  — examination continues with reduced confidence.
+                </p>
               </div>
-            );
-          })}
+            )}
+          </div>
         </div>
 
-        {/* System message */}
-        {currentStage > 0 && currentStage < examinationStages.length && (
-          <div className="mt-6 p-3 bg-forensic-panel border border-forensic-border rounded-sm">
-            <p className="font-mono text-[11px] text-forensic-text leading-relaxed">
-              {getSystemMessage(currentStage)}
-            </p>
+        {/* Live Examiner Messages */}
+        <div className="bg-forensic-panel border border-forensic-border rounded-sm p-4">
+          <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-forensic-muted block mb-3">
+            EXAMINER LOG
+          </span>
+          <div className="space-y-1 max-h-[200px] overflow-y-auto workspace-scroll-panel">
+            {messageLog.map((msg, i) => {
+              const isLatest = i === messageLog.length - 1;
+              return (
+                <div key={i} className={`flex items-start gap-2 ${isLatest ? "" : "opacity-50"}`}>
+                  <span className="font-mono text-[9px] text-forensic-muted flex-shrink-0 mt-0.5">
+                    [{String(i + 1).padStart(2, "0")}]
+                  </span>
+                  <p className={`font-mono text-[10px] leading-relaxed ${isLatest ? "text-verdict-active" : "text-forensic-text"}`}>
+                    {msg}
+                    {isLatest && <span className="inline-block w-1.5 h-3 bg-verdict-active ml-1 animate-pulse" />}
+                  </p>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-}
-
-function getSystemMessage(stage: number): string {
-  const messages = [
-    "",
-    "Specimen identity validation in progress...",
-    "Case accepted. Proceeding to evidence securing.",
-    "Case ID assigned. Evidence acquisition commencing.",
-    "Acquiring launch context from four.meme...",
-    "Acquiring market data from DexScreener...",
-    "Acquiring holder structure from BscScan...",
-    "Evidence acquisition complete. Internal examination may proceed.",
-    "External examination initiated. Documenting visible markings...",
-    "Cataloging surface-level signals and presentation...",
-    "Internal examination initiated. Parsing narrative tissue...",
-    "Analyzing narrative structure and doctrine presence...",
-    "Evaluating structural integrity of belief architecture...",
-    "Running toxicology screen for degenerative patterns...",
-    "Screening for concentration-driven fragility and narrative exhaustion...",
-    "Reconstructing initial spread mechanism...",
-    "Reconstructing death or survival mechanism...",
-    "Estimating lifecycle position and stage of decay...",
-    "Determining probable cause from evidence chain...",
-    "Classifying manner of death based on pathology findings...",
-    "Consolidating examination. Drafting final opinion...",
-    "Final opinion issued.",
-  ];
-  return messages[stage] || "";
 }

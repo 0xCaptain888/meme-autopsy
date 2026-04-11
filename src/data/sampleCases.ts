@@ -321,11 +321,15 @@ export const sampleInputs: Record<string, FormData> = {
 
 export interface ArchivedCaseFile {
   key: string;
-  specimenLabel: string;
+  specimenLabel: "TERMINAL SPECIMEN" | "PRESERVED SPECIMEN" | "OPEN EXAMINATION";
   condition: string;
   causeOfDeath: string;
   caseId: string;
   accentClass: string;
+  confidence: number;
+  mannerOrOutlook: string;
+  filedAt: string;
+  oneLineSummary: string;
 }
 
 export const archivedCases: ArchivedCaseFile[] = [
@@ -336,6 +340,10 @@ export const archivedCases: ArchivedCaseFile[] = [
     causeOfDeath: "Slogan-only virality without doctrine formation",
     caseId: "MA-2026-0418",
     accentClass: "verdict-critical",
+    confidence: 85,
+    mannerOrOutlook: "Structural failure",
+    filedAt: "2026-04-11T15:10:00Z",
+    oneLineSummary: "No internal narrative anatomy. Novelty-only virality with zero structural support.",
   },
   {
     key: "DogePriest",
@@ -344,6 +352,10 @@ export const archivedCases: ArchivedCaseFile[] = [
     causeOfDeath: "Narrative exhaustion following novelty-driven spread",
     caseId: "MA-2026-0417",
     accentClass: "verdict-active",
+    confidence: 72,
+    mannerOrOutlook: "Natural decay",
+    filedAt: "2026-04-11T14:32:00Z",
+    oneLineSummary: "Strong symbolic compression but critically deficient structural integrity.",
   },
   {
     key: "SaintMeme",
@@ -352,5 +364,9 @@ export const archivedCases: ArchivedCaseFile[] = [
     causeOfDeath: "N/A — Mission-led cohesion with elastic belief reframing",
     caseId: "MA-2026-0419",
     accentClass: "verdict-signal",
+    confidence: 81,
+    mannerOrOutlook: "Preserved",
+    filedAt: "2026-04-11T16:05:00Z",
+    oneLineSummary: "Counter-culture mission framing with expandable doctrine and identity-driven participation.",
   },
 ];
