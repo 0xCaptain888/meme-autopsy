@@ -1,184 +1,105 @@
-"use client";
-
-import { sampleReports } from "@/data/sampleCases";
-import type { ScoreSet } from "@/lib/types";
-import StatusBadge from "./StatusBadge";
+import { useI18n } from "@/lib/i18n";
 
 interface SampleAutopsyPreviewProps {
   onViewFullReport: () => void;
 }
 
-const report = sampleReports["DogePriest"];
-
-const dimensionLabels: Record<keyof ScoreSet, string> = {
-  symbolicDensity: "Symbolic Density",
-  loreDepth: "Lore Depth",
-  ritualRepeatability: "Ritual Repeat.",
-  communityCohesion: "Community Coh.",
-  beliefElasticity: "Belief Elast.",
-  narrativeSurvivability: "Narrative Surv.",
-};
-
-function getBarColor(v: number) {
-  if (v >= 70) return "bg-verdict-signal";
-  if (v >= 40) return "bg-verdict-active";
-  return "bg-verdict-critical";
-}
-
-function getTextColor(v: number) {
-  if (v >= 70) return "text-verdict-signal";
-  if (v >= 40) return "text-verdict-active";
-  return "text-verdict-critical";
-}
-
 export default function SampleAutopsyPreview({ onViewFullReport }: SampleAutopsyPreviewProps) {
-  const timelineItems = report.collapse_timeline.slice(0, 3);
-  const interventions = report.interventions;
-
+  const { t } = useI18n();
   return (
     <section className="relative py-20 px-4">
-      {/* Background accent */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-verdict-critical/[0.02] to-transparent" />
-
       <div className="relative max-w-5xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-verdict-critical">
             // SAMPLE AUTOPSY REPORT
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold mt-3 mb-3">
-            Forensic diagnosis at a glance
+          <h2 className="font-display text-3xl sm:text-4xl font-bold mt-3 mb-3 text-bone">
+            Cause-of-death reconstruction at a glance
           </h2>
           <p className="font-body text-forensic-text text-sm max-w-lg mx-auto">
-            No clicks needed. Here is what a complete autopsy report looks like.
+            Here is what a complete forensic examination produces. From evidence securing through final opinion issuance.
           </p>
         </div>
 
-        {/* Report preview card */}
         <div className="reveal bg-forensic-panel border border-forensic-border rounded-sm overflow-hidden">
-          {/* Top accent */}
           <div className="h-px bg-verdict-active" />
-
           <div className="p-6 sm:p-8">
-            {/* Case header row */}
+            {/* Case header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
               <div className="flex items-center gap-4">
-                <h3 className="font-mono text-2xl sm:text-3xl font-bold text-bone tracking-tight">
-                  {report.project_name}
-                </h3>
-                <StatusBadge badge={report.statusBadge} />
+                <h3 className="font-mono text-2xl sm:text-3xl font-bold text-bone tracking-tight">DogePriest</h3>
+                <span className="inline-flex items-center gap-2 px-3 py-1 font-mono text-[10px] tracking-[0.15em] font-semibold uppercase border border-verdict-active/40 bg-verdict-active/10 text-verdict-active rounded-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-verdict-active animate-pulse" />
+                  OPEN EXAMINATION
+                </span>
               </div>
-              <div className="font-mono text-[10px] text-forensic-muted tracking-wider">
-                {report.case_id} &middot; {report.analysis_timestamp}
-              </div>
+              <span className="font-mono text-[10px] text-forensic-muted">MA-2026-0417</span>
             </div>
 
-            {/* Verdict + confidence */}
+            {/* Pronounced condition */}
             <div className="mb-6 pb-5 border-b border-forensic-border">
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">
-                  VERDICT:
-                </span>
-                <span className="font-display text-lg font-semibold text-bone">
-                  {report.verdict}
-                </span>
-                <span className="font-mono text-[10px] text-verdict-active">
-                  {report.confidence}% confidence
-                </span>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted">PRONOUNCED CONDITION:</span>
+                <span className="font-display text-lg font-semibold text-bone">Viral but Fragile</span>
+                <span className="font-mono text-[10px] text-verdict-active">72% confidence</span>
               </div>
               <p className="font-body text-sm text-forensic-text mt-1">
-                {report.primary_cause}
+                Probable Cause of Death: narrative exhaustion following novelty-driven spread
               </p>
             </div>
 
-            {/* Mini score grid */}
+            {/* Diagnostic Protocol */}
             <div className="mb-6">
               <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted mb-3 block">
-                FORENSIC SCORES
+                DIAGNOSTIC PROTOCOL
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {(Object.keys(dimensionLabels) as (keyof ScoreSet)[]).map((key) => {
-                  const dim = report.scores[key];
-                  return (
-                    <div key={key} className="bg-forensic-dark border border-forensic-border/50 rounded-sm p-3">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="font-mono text-[9px] tracking-wider uppercase text-forensic-muted">
-                          {dimensionLabels[key]}
-                        </span>
-                        <span className={`font-mono text-sm font-bold ${getTextColor(dim.score)}`}>
-                          {dim.score}
-                        </span>
-                      </div>
-                      <div className="w-full h-0.5 bg-forensic-border rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full progress-bar-fill ${getBarColor(dim.score)}`}
-                          style={{ "--target-width": `${dim.score}%` } as React.CSSProperties}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { label: "Surface Signals", value: 84, color: "text-verdict-signal" },
+                  { label: "Structural Integrity", value: 46, color: "text-verdict-active" },
+                  { label: "Degeneration", value: 71, color: "text-verdict-critical" },
+                  { label: "Survival Capacity", value: 38, color: "text-verdict-critical" },
+                ].map((s) => (
+                  <div key={s.label} className="bg-forensic-dark border border-forensic-border/50 rounded-sm p-3 text-center">
+                    <span className="font-mono text-[9px] tracking-wider uppercase text-forensic-muted block mb-1">{s.label}</span>
+                    <span className={`font-mono text-2xl font-bold ${s.color}`}>{s.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Two columns: timeline + interventions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Timeline excerpt */}
-              <div>
-                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted mb-3 block">
-                  COLLAPSE TIMELINE (EXCERPT)
-                </span>
-                <div className="space-y-2">
-                  {timelineItems.map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 bg-forensic-dark border border-forensic-border/50 rounded-sm p-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full border border-forensic-border flex items-center justify-center mt-0.5">
-                        <span className="font-mono text-[8px] text-forensic-muted">{i + 1}</span>
-                      </div>
-                      <div>
-                        <span className="font-mono text-[10px] tracking-wider uppercase text-bone block mb-0.5">
-                          {item.phase}
-                        </span>
-                        <p className="font-body text-xs text-forensic-text leading-relaxed">
-                          {item.diagnosis}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Interventions */}
-              <div>
-                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted mb-3 block">
-                  RECOMMENDED INTERVENTIONS
-                </span>
-                <div className="space-y-2">
-                  {interventions.map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 bg-forensic-dark border border-forensic-border/50 rounded-sm p-3">
-                      <span className="flex-shrink-0 font-mono text-[10px] font-semibold text-verdict-active mt-0.5">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <p className="font-body text-xs text-forensic-text leading-relaxed">
-                        {item}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+            {/* Pathology alerts */}
+            <div className="mb-6">
+              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-forensic-muted mb-2 block">
+                PATHOLOGY ALERTS
+              </span>
+              <div className="space-y-1.5">
+                {[
+                  "Doctrine-free identity — repeatable slogans without expandable lore",
+                  "Price-reactive community behavior — participation tied to price, not identity",
+                  "Narrative exhaustion risk — no expandable myth arc identified",
+                ].map((a, i) => (
+                  <div key={i} className="flex items-start gap-2 font-mono text-[11px] text-verdict-critical">
+                    <span className="text-verdict-critical mt-0.5">▸</span>
+                    <span>{a}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* View full report CTA */}
-            <div className="mt-6 pt-5 border-t border-forensic-border flex items-center justify-between">
-              <span className="font-mono text-[10px] text-forensic-muted tracking-wider">
-                This is a preview of the full report.
+            {/* View full report */}
+            <div className="pt-4 border-t border-forensic-border flex items-center justify-between">
+              <span className="font-mono text-[9px] text-forensic-muted tracking-wider">
+                Manner of Death: Natural decay &middot; Survival Outlook: Pre-terminal
               </span>
               <button
                 onClick={onViewFullReport}
-                className="group flex items-center gap-2 px-5 py-2 border border-verdict-critical/40 rounded-sm font-mono text-xs tracking-wider uppercase text-verdict-critical hover:bg-verdict-critical hover:text-white transition-all duration-300"
+                className="font-mono text-[11px] tracking-wider uppercase text-verdict-active hover:text-bone transition-colors flex items-center gap-1.5"
               >
-                View Full Report
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+                View Full Autopsy Report
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.3">
+                  <path d="M2 5h6M6 3l2 2-2 2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>

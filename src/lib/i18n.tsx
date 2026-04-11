@@ -1,282 +1,181 @@
-"use client";
-
 import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import type { Language } from "./types";
 
 type TranslationDict = Record<string, Record<string, string>>;
 
 const translations: TranslationDict = {
-  // Hero
-  "hero.headline": {
-    en: "AI Forensic Intelligence for BSC Meme Narratives",
-    zh: "BSC Meme 叙事的 AI 法医情报",
-  },
+  // Navbar
+  "nav.title": { en: "MEME AUTOPSY", zh: "MEME 尸检" },
+  "nav.tagline": { en: "Forensic Autopsy System", zh: "法医尸检系统" },
+
+  // Hero - V2 forensic identity
+  "hero.headline": { en: "Forensic Autopsy for Meme Projects", zh: "Meme 项目的法医尸检" },
   "hero.subheadline": {
-    en: "Ingests live data from DexScreener, BscScan, and four.meme. Extracts narrative structure. Delivers structured forensic verdicts.",
-    zh: "从 DexScreener、BscScan 和 four.meme 获取实时数据。提取叙事结构。提供结构化法医判定。",
+    en: "Reconstructs why a project spread, why it decayed, and what caused death — or what preserved survival. Formal digital autopsy from intake through opinion issuance.",
+    zh: "重建项目传播的原因、衰退的原因、死亡的原因——或存活的机制。从受理到意见出具的正式数字尸检。",
   },
   "hero.supporting": {
-    en: "BSC-first. four.meme-first. Real chain data, not vibes.",
-    zh: "BSC 优先。four.meme 优先。真实链上数据，而非臆测。",
+    en: "BSC-first. four.meme-first. Evidence-based forensic examination, not vibes.",
+    zh: "BSC 优先。four.meme 优先。基于证据的法医检查，而非臆测。",
   },
-  "hero.runAutopsy": { en: "Analyze Contract", zh: "分析合约" },
-  "hero.loadSample": { en: "View Sample Report", zh: "查看示例报告" },
+  "hero.openCase": { en: "Open Case", zh: "开启案件" },
+  "hero.viewArchived": { en: "View Archived Case File", zh: "查看已归档案件" },
 
-  // Source Badges
+  // Sources
+  "source.label": { en: "EVIDENCE SOURCES", zh: "证据来源" },
+  "source.fourmeme": { en: "four.meme", zh: "four.meme" },
   "source.dexscreener": { en: "DexScreener", zh: "DexScreener" },
   "source.bscscan": { en: "BscScan", zh: "BscScan" },
-  "source.fourmeme": { en: "four.meme", zh: "four.meme" },
   "source.openai": { en: "OpenAI", zh: "OpenAI" },
-  "source.label": { en: "LIVE DATA SOURCES", zh: "实时数据来源" },
 
-  // Framework Grid (dimensions)
-  "framework.title": { en: "The Six Forensic Dimensions", zh: "六大法医维度" },
-  "framework.subtitle": {
-    en: "Every meme project is scored across six structural dimensions that determine its cultural survivability.",
-    zh: "每个 Meme 项目都按照决定其文化生存能力的六个结构维度进行评分。",
-  },
-  "framework.symbolicDensity": { en: "Symbolic Density", zh: "符号密度" },
-  "framework.symbolicDensity.desc": {
-    en: "How visually and conceptually memorable the core symbols are.",
-    zh: "核心符号在视觉和概念上的记忆度。",
-  },
-  "framework.loreDepth": { en: "Lore Depth", zh: "传说深度" },
-  "framework.loreDepth.desc": {
-    en: "The richness and expandability of the project's mythology.",
-    zh: "项目神话体系的丰富性和可扩展性。",
-  },
-  "framework.ritualRepeatability": { en: "Ritual Repeatability", zh: "仪式可重复性" },
-  "framework.ritualRepeatability.desc": {
-    en: "Whether the community language supports repeatable, shareable engagement.",
-    zh: "社区语言是否支持可重复、可分享的参与。",
-  },
-  "framework.communityCohesion": { en: "Community Cohesion", zh: "社区凝聚力" },
-  "framework.communityCohesion.desc": {
-    en: "How strongly the group identity holds under pressure and over time.",
-    zh: "群体身份认同在压力下和时间推移中的坚固程度。",
-  },
-  "framework.beliefElasticity": { en: "Belief Elasticity", zh: "信仰弹性" },
-  "framework.beliefElasticity.desc": {
-    en: "The project's capacity to evolve without losing core believers.",
-    zh: "项目在不失去核心信徒的情况下进化的能力。",
-  },
-  "framework.narrativeSurvivability": { en: "Narrative Survivability", zh: "叙事生存能力" },
-  "framework.narrativeSurvivability.desc": {
-    en: "Whether the story can outlast its initial attention window.",
-    zh: "故事是否能超越其初始关注窗口期。",
+  // Examination Protocol (formerly Framework Grid)
+  "protocol.title": { en: "Examination Protocol", zh: "检查协议" },
+  "protocol.subtitle": {
+    en: "A proprietary diagnostic protocol combining rules-based measurement with AI interpretation across four forensic layers.",
+    zh: "结合规则测量与 AI 解释的四层法医专有诊断协议。",
   },
 
-  // Input Demo CTA
-  "inputCTA.title": { en: "Ready to Analyze a BSC Contract?", zh: "准备分析 BSC 合约？" },
-  "inputCTA.subtitle": {
-    en: "Paste any BSC contract address to get a full forensic diagnosis with live data from DexScreener, BscScan, and four.meme.",
-    zh: "粘贴任何 BSC 合约地址，获取来自 DexScreener、BscScan 和 four.meme 实时数据的完整法医诊断。",
+  // Diagnostic Layers
+  "layer.surfaceSignals": { en: "Surface Signals", zh: "表面信号" },
+  "layer.surfaceSignals.desc": {
+    en: "Measures why the specimen became immediately legible and spreadable on contact. Symbolic recognizability, slogan compression, memetic distinctiveness.",
+    zh: "衡量标本为何在接触时立即可读且可传播。符号识别度、口号压缩、模因独特性。",
   },
-  "inputCTA.button": { en: "Analyze a BSC Contract", zh: "分析 BSC 合约" },
-
-  // Sample Cases
-  "samples.title": { en: "Sample Cases", zh: "示例案件" },
-  "samples.subtitle": {
-    en: "Explore pre-analyzed forensic reports across the meme lifecycle spectrum.",
-    zh: "探索跨越 Meme 生命周期谱系的预分析法医报告。",
+  "layer.structuralIntegrity": { en: "Structural Integrity", zh: "结构完整性" },
+  "layer.structuralIntegrity.desc": {
+    en: "Whether the project has internal narrative anatomy strong enough to survive beyond initial attention. Lore depth, doctrine, community identity.",
+    zh: "项目是否具有足够强的内部叙事结构以超越初始关注。传说深度、教义、社区身份。",
   },
-
-  // Input Panel
-  "input.title": { en: "Open a New Case", zh: "开启新案件" },
-  "input.subtitle": {
-    en: "Submit a meme project's narrative, community language, and context for forensic analysis.",
-    zh: "提交 Meme 项目的叙事、社区语言和上下文进行法医分析。",
+  "layer.degenerationFactors": { en: "Degeneration Factors", zh: "退化因素" },
+  "layer.degenerationFactors.desc": {
+    en: "What actively destabilizes the specimen. Holder concentration, liquidity fragility, price-dependent participation, narrative exhaustion.",
+    zh: "主动破坏标本稳定性的因素。持有者集中度、流动性脆弱性、价格依赖参与、叙事枯竭。",
   },
-  "input.projectName": { en: "Project Name", zh: "项目名称" },
-  "input.narrative": { en: "Narrative Description", zh: "叙事描述" },
-  "input.communityText": {
-    en: "Tweets / Community Text (optional)",
-    zh: "推文 / 社区文本（可选）",
-  },
-  "input.notes": { en: "Additional Notes (optional)", zh: "附加备注（可选）" },
-  "input.submit": { en: "Run Full Autopsy", zh: "执行完整尸检" },
-  "input.note": {
-    en: "No price charts. No hype metrics. Just narrative forensics.",
-    zh: "没有价格图表。没有炒作指标。只有叙事法医学。",
-  },
-  "input.back": { en: "Back", zh: "返回" },
-
-  // Loading Steps
-  "loading.title": { en: "Analyzing Case", zh: "分析案件中" },
-  "loading.0": { en: "Parsing narrative structure...", zh: "解析叙事结构..." },
-  "loading.1": { en: "Extracting symbolic anchors...", zh: "提取符号锚点..." },
-  "loading.2": { en: "Evaluating ritual repeatability...", zh: "评估仪式可重复性..." },
-  "loading.3": { en: "Estimating collapse risks...", zh: "估算崩溃风险..." },
-  "loading.4": { en: "Building report...", zh: "构建报告..." },
-
-  // Report
-  "report.label": { en: "CASE REPORT", zh: "案件报告" },
-  "report.title": { en: "Autopsy Findings", zh: "尸检结果" },
-  "report.subtitle": {
-    en: "Forensic diagnosis of narrative survivability, symbolic strength, and collapse risk.",
-    zh: "叙事生存能力、符号强度和崩溃风险的法医诊断。",
-  },
-  "report.verdict": { en: "Verdict", zh: "判定" },
-  "report.confidence": { en: "Confidence", zh: "置信度" },
-  "report.primaryCause": { en: "Primary Cause", zh: "主要原因" },
-  "report.summary": { en: "Summary", zh: "摘要" },
-  "report.rerun": { en: "Re-run Analysis", zh: "重新分析" },
-  "report.compare": { en: "Compare Results", zh: "比较结果" },
-
-  // Verdict translations
-  "verdict.Dead on Arrival": { en: "Dead on Arrival", zh: "到达即死亡" },
-  "verdict.Viral but Fragile": { en: "Viral but Fragile", zh: "病毒式但脆弱" },
-  "verdict.Short-Term Attention Trap": { en: "Short-Term Attention Trap", zh: "短期注意力陷阱" },
-  "verdict.Stable Cult Potential": { en: "Stable Cult Potential", zh: "稳定邪典潜力" },
-  "verdict.High Conviction Meme": { en: "High Conviction Meme", zh: "高信念 Meme" },
-  "verdict.Chaos Without Cohesion": { en: "Chaos Without Cohesion", zh: "无凝聚力的混沌" },
-
-  // Badge translations
-  "badge.CRITICAL": { en: "CRITICAL", zh: "危急" },
-  "badge.ACTIVE CASE": { en: "ACTIVE CASE", zh: "活跃案件" },
-  "badge.HIGH SIGNAL": { en: "HIGH SIGNAL", zh: "高信号" },
-  "badge.WARNING": { en: "WARNING", zh: "警告" },
-  "badge.NEUTRAL": { en: "NEUTRAL", zh: "中性" },
-
-  // Forensic Breakdown (score dimensions)
-  "breakdown.title": { en: "Forensic Breakdown", zh: "法医分析" },
-  "breakdown.subtitle": {
-    en: "A structural analysis of the project's ability to spread, survive, and sustain belief.",
-    zh: "对项目传播、生存和维持信仰能力的结构性分析。",
-  },
-  "score.symbolicDensity": { en: "Symbolic Density", zh: "符号密度" },
-  "score.loreDepth": { en: "Lore Depth", zh: "传说深度" },
-  "score.ritualRepeatability": { en: "Ritual Repeatability", zh: "仪式可重复性" },
-  "score.communityCohesion": { en: "Community Cohesion", zh: "社区凝聚力" },
-  "score.beliefElasticity": { en: "Belief Elasticity", zh: "信仰弹性" },
-  "score.narrativeSurvivability": { en: "Narrative Survivability", zh: "叙事生存能力" },
-
-  // Timeline
-  "timeline.title": { en: "Collapse Timeline", zh: "崩溃时间线" },
-  "timeline.subtitle": {
-    en: "Projected failure points across the lifecycle of narrative attention and belief formation.",
-    zh: "叙事关注和信仰形成生命周期中的预计失败节点。",
+  "layer.survivalCapacity": { en: "Survival Capacity", zh: "生存能力" },
+  "layer.survivalCapacity.desc": {
+    en: "Whether the specimen possesses mechanisms to adapt, retain believers, and survive past novelty. Belief elasticity, ritual persistence, narrative survivability.",
+    zh: "标本是否具备适应、留住信徒并超越新奇感的生存机制。信仰弹性、仪式持久性、叙事生存能力。",
   },
 
-  // Interventions
-  "interventions.title": { en: "Recommended Interventions", zh: "建议干预措施" },
-  "interventions.subtitle": {
-    en: "Specific actions to increase symbolic durability, community cohesion, and long-term survivability.",
-    zh: "增强符号持久性、社区凝聚力和长期生存能力的具体行动。",
+  // Case Intake (formerly Analyze)
+  "intake.title": { en: "New Case Intake", zh: "新案件受理" },
+  "intake.subtitle": {
+    en: "Submit specimen identifier and attach scene context to initiate examination.",
+    zh: "提交标本标识符并附上现场背景以启动检查。",
+  },
+  "intake.contractAddress": { en: "Specimen Identifier (Contract Address)", zh: "标本标识符（合约地址）" },
+  "intake.sceneNotes": { en: "Scene Notes", zh: "现场笔记" },
+  "intake.launchPlatform": { en: "Source Origin", zh: "来源平台" },
+  "intake.submit": { en: "Register Case", zh: "登记案件" },
+  "intake.note": {
+    en: "On-chain evidence is secured automatically from DexScreener, BscScan, and four.meme.",
+    zh: "链上证据从 DexScreener、BscScan 和 four.meme 自动获取。",
   },
 
-  // Forensic Notes
-  "forensicNotes.title": { en: "Forensic Notes", zh: "法医备注" },
-
-  // Reasoning Signals
-  "reasoningSignals.title": { en: "Reasoning Signals", zh: "推理信号" },
-  "reasoningSignals.subtitle": {
-    en: "Key signals detected during analysis that informed the verdict.",
-    zh: "分析过程中检测到的影响判定的关键信号。",
+  // Archived Case Files (formerly Sample Cases)
+  "cases.title": { en: "Archived Case Files", zh: "已归档案件" },
+  "cases.subtitle": {
+    en: "Prior examinations representing distinct death modes and survival modes across the meme lifecycle.",
+    zh: "代表 Meme 生命周期中不同死亡模式和存活模式的先前检查。",
   },
 
-  // Input Snapshot
-  "inputSnapshot.title": { en: "Input Snapshot", zh: "输入快照" },
-  "inputSnapshot.subtitle": {
-    en: "The original data submitted for this analysis.",
-    zh: "提交用于本次分析的原始数据。",
-  },
+  // Specimen Labels
+  "specimen.terminal": { en: "TERMINAL SPECIMEN", zh: "终末标本" },
+  "specimen.preserved": { en: "PRESERVED SPECIMEN", zh: "保存标本" },
+  "specimen.open": { en: "OPEN EXAMINATION", zh: "在检标本" },
 
-  // Compare Results
-  "compare.title": { en: "Compare Results", zh: "比较结果" },
-  "compare.subtitle": {
-    en: "Side-by-side comparison between the original and revised analysis.",
-    zh: "原始分析与修订分析的并排比较。",
-  },
-  "compare.original": { en: "Original", zh: "原始" },
-  "compare.revised": { en: "Revised", zh: "修订" },
-  "compare.improved": { en: "Improved", zh: "提升" },
-  "compare.declined": { en: "Declined", zh: "下降" },
-  "compare.unchanged": { en: "Unchanged", zh: "未变" },
+  // Report sections - V2 autopsy structure
+  "report.label": { en: "AUTOPSY REPORT", zh: "尸检报告" },
+  "report.caseHeader": { en: "Case Header", zh: "案件头部" },
+  "report.caseBackground": { en: "Case Background", zh: "案件背景" },
+  "report.externalExam": { en: "External Examination", zh: "外部检查" },
+  "report.internalExam": { en: "Internal Examination", zh: "内部检查" },
+  "report.pathologyFindings": { en: "Pathology Findings", zh: "病理发现" },
+  "report.viralityMechanism": { en: "Mechanism of Virality", zh: "传播机制" },
+  "report.deathMechanism": { en: "Mechanism of Death or Survival", zh: "死亡或存活机制" },
+  "report.causeOfDeath": { en: "Cause of Death", zh: "死亡原因" },
+  "report.contributingFactors": { en: "Contributing Factors", zh: "促成因素" },
+  "report.mannerOfDeath": { en: "Manner of Death", zh: "死亡方式" },
+  "report.evidenceLog": { en: "Evidence Log", zh: "证据日志" },
+  "report.finalOpinion": { en: "Final Autopsy Opinion", zh: "最终尸检意见" },
+  "report.diagnosticProtocol": { en: "Diagnostic Protocol", zh: "诊断协议" },
+  "report.vitalSigns": { en: "Vital Signs", zh: "生命体征" },
+  "report.confidenceOfDetermination": { en: "Confidence of Determination", zh: "判定置信度" },
+  "report.uncertaintyNotes": { en: "Uncertainty Notes", zh: "不确定性说明" },
+  "report.stageOfDecay": { en: "Estimated Stage of Decay", zh: "预估衰败阶段" },
+  "report.survivalOutlook": { en: "Survival Outlook", zh: "存活前景" },
 
-  // Empty State
-  "empty.title": { en: "No Report Yet", zh: "暂无报告" },
-  "empty.subtitle": {
-    en: "Submit a meme project on the left to begin forensic analysis.",
-    zh: "在左侧提交一个 Meme 项目以开始法医分析。",
-  },
+  // Buttons
+  "btn.openCase": { en: "Open Case", zh: "开启案件" },
+  "btn.reopenExam": { en: "Reopen Examination", zh: "重新检查" },
+  "btn.viewReport": { en: "View Autopsy Report", zh: "查看尸检报告" },
+  "btn.registerNew": { en: "Register New Case", zh: "登记新案件" },
+  "btn.viewEvidence": { en: "View Evidence Chain", zh: "查看证据链" },
 
-  // Comparable Pattern
-  "comparable.title": { en: "Comparable Pattern", zh: "可比模式" },
+  // Loading States - V2 forensic stages
+  "loading.intake": { en: "Case intake in progress", zh: "案件受理中" },
+  "loading.validating": { en: "Validating specimen identity", zh: "验证标本身份" },
+  "loading.accepted": { en: "Case accepted", zh: "案件已受理" },
+  "loading.assigningId": { en: "Assigning case ID", zh: "分配案件编号" },
+  "loading.securingFourmeme": { en: "Securing evidence from four.meme", zh: "从 four.meme 获取证据" },
+  "loading.securingDex": { en: "Securing evidence from DexScreener", zh: "从 DexScreener 获取证据" },
+  "loading.securingBsc": { en: "Securing evidence from BscScan", zh: "从 BscScan 获取证据" },
+  "loading.verifyingChain": { en: "Verifying evidence chain", zh: "验证证据链" },
+  "loading.externalExam": { en: "Performing external examination", zh: "执行外部检查" },
+  "loading.catalogingMarkings": { en: "Cataloging visible markings", zh: "编录可见标记" },
+  "loading.internalExam": { en: "Performing internal examination", zh: "执行内部检查" },
+  "loading.parsingNarrative": { en: "Parsing narrative tissue", zh: "解析叙事组织" },
+  "loading.evaluatingIntegrity": { en: "Evaluating structural integrity", zh: "评估结构完整性" },
+  "loading.toxicology": { en: "Running toxicology screen", zh: "运行毒理学筛查" },
+  "loading.degenerative": { en: "Screening for degenerative patterns", zh: "筛查退化模式" },
+  "loading.viralityRecon": { en: "Reconstructing mechanism of virality", zh: "重建传播机制" },
+  "loading.deathRecon": { en: "Reconstructing mechanism of death", zh: "重建死亡机制" },
+  "loading.stageOfDecay": { en: "Estimating stage of decay", zh: "估算衰败阶段" },
+  "loading.probableCause": { en: "Determining probable cause", zh: "确定可能原因" },
+  "loading.mannerOfDeath": { en: "Classifying manner of death", zh: "分类死亡方式" },
+  "loading.draftingOpinion": { en: "Drafting autopsy opinion", zh: "起草尸检意见" },
+  "loading.opinionIssued": { en: "Final opinion issued", zh: "最终意见已出具" },
 
-  // Nav
-  "nav.title": { en: "MEME AUTOPSY", zh: "MEME AUTOPSY" },
-  "nav.tagline": { en: "BSC Forensic Intelligence", zh: "BSC 法医情报" },
-
-  // Footer
-  "footer.text": {
-    en: "Meme Autopsy \u2014 AI Forensic Intelligence for BSC Meme Narratives",
-    zh: "Meme Autopsy \u2014 BSC Meme 叙事的 AI 法医情报",
+  // Thesis
+  "thesis.label": { en: "AUTOPSY RATIONALE", zh: "尸检原理" },
+  "thesis.title": { en: "From generation to cause-of-death reconstruction", zh: "从生成到死因重建" },
+  "thesis.body": {
+    en: "Most meme tools help analyze sentiment. Meme Autopsy reconstructs why projects spread, why they decayed, and what ultimately caused death — or what mechanisms preserved survival.",
+    zh: "大多数 Meme 工具帮助分析情绪。Meme Autopsy 重建项目传播的原因、衰退的原因、以及最终导致死亡的原因——或保持存活的机制。",
   },
-
-  // HowItWorks
-  "howItWorks.title": { en: "Forensic diagnosis in three steps", zh: "三步法医诊断" },
-  "howItWorks.step1.title": { en: "Paste a BSC contract address", zh: "粘贴 BSC 合约地址" },
-  "howItWorks.step1.desc": {
-    en: "Input any BSC token contract address. The engine identifies the project and begins data ingestion.",
-    zh: "输入任何 BSC 代币合约地址。引擎识别项目并开始数据摄取。",
-  },
-  "howItWorks.step2.title": { en: "Live data ingestion & analysis", zh: "实时数据摄取与分析" },
-  "howItWorks.step2.desc": {
-    en: "Live market, holder, and narrative data ingestion from DexScreener, BscScan, and four.meme.",
-    zh: "从 DexScreener、BscScan 和 four.meme 摄取实时市场、持有者和叙事数据。",
-  },
-  "howItWorks.step3.title": { en: "Structured forensic verdict", zh: "结构化法医判定" },
-  "howItWorks.step3.desc": {
-    en: "Structured forensic verdict with data provenance, warning flags, and missing-data disclosure.",
-    zh: "结构化法医判定，附带数据来源、警告标志和缺失数据披露。",
-  },
-
-  // NotAnotherMemeTool
-  "distinction.title": { en: "Not another meme tool", zh: "不只是另一个 Meme 工具" },
-  "distinction.desc": {
-    en: "Meme Autopsy is built on real chain data from BSC, not vibes. Every data point shows its source. When data is missing, we say so.",
-    zh: "Meme Autopsy 基于 BSC 的真实链上数据构建，而非臆测。每个数据点都显示其来源。当数据缺失时，我们会如实告知。",
-  },
-  "distinction.other.1": { en: "Black box AI", zh: "黑箱 AI" },
-  "distinction.other.2": { en: "Always 100% confident", zh: "始终 100% 自信" },
-  "distinction.other.3": { en: "Generic multi-chain", zh: "通用多链" },
-  "distinction.ma.1": { en: "Shows where data came from", zh: "显示数据来源" },
-  "distinction.ma.2": { en: "Admits when data is missing", zh: "承认数据缺失" },
-  "distinction.ma.3": { en: "BSC-first, four.meme-first", zh: "BSC 优先，four.meme 优先" },
 };
 
-interface I18nContextType {
+interface I18nContext {
   lang: Language;
-  setLang: (lang: Language) => void;
+  setLang: (l: Language) => void;
   t: (key: string) => string;
 }
 
-const I18nContext = createContext<I18nContextType>({
+const I18nCtx = createContext<I18nContext>({
   lang: "en",
   setLang: () => {},
-  t: (key: string) => key,
+  t: (k) => k,
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
 
   const t = useCallback(
-    (key: string) => {
+    (key: string): string => {
       const entry = translations[key];
       if (!entry) return key;
-      return entry[lang] || entry["en"] || key;
+      return entry[lang] ?? entry.en ?? key;
     },
     [lang]
   );
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t }}>
+    <I18nCtx.Provider value={{ lang, setLang, t }}>
       {children}
-    </I18nContext.Provider>
+    </I18nCtx.Provider>
   );
 }
 
 export function useI18n() {
-  return useContext(I18nContext);
+  return useContext(I18nCtx);
 }
